@@ -83,4 +83,4 @@
 -instpath=inc:${HB_ADDONS}/hbqt/
 -instpath=tests:${HB_ADDONS}/hbqt/tests/
 
-
+-cpp=iso11
