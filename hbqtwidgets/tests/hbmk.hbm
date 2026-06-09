@@ -3,7 +3,7 @@
 #
 
 hbqtwidgets.hbc
-
+hbwin.hbc
 -w3 -es2
 -mt
 

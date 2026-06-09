@@ -4,6 +4,7 @@
 
 -hbcontainer
 
+-cpp=iso11
 #    Generate SVN Revision Info
 #-vcshead=hbide/hbide_v.ch
 
@@ -31,7 +32,7 @@ hbqt/qtbluetooth/hbqtbluetooth.hbp
 hbqt/qtqml/hbqtqml.hbp
 hbqt/qtquick/hbqtquick.hbp
 hbqt/qtsensors/hbqtsensors.hbp
-hbqt/qtcharts/hbqtcharts.hbp
+# hbqt/qtcharts/hbqtcharts.hbp
 hbqt/qzxing/hbqtzxing.hbp
 
 
@@ -48,9 +49,9 @@ hbxbp/hbxbp.hbp
 
 #    Qt based Harbour IDE
 #
-hbide/hbide.hbp
+#hbide/hbide.hbp
 
 #    Qt based Harbour DBU
 #
-hbdbu/hbdbu.hbp
+#hbdbu/hbdbu.hbp
 
