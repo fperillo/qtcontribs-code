@@ -3,3 +3,6 @@
 **/*.exe
 **/*~
 **/*.hbx
+hbqt/hbqtcore.ch
+*.swp
+hbqt/hbqtgui.ch
