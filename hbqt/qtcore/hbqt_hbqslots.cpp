@@ -237,7 +237,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
          if( paramString.isNull() )
          {
             QStringList parList;
-            HB_TRACE( HB_TR_DEBUG, ( "SlotsProxy signature %s", meta.signature() ) );
+            // HB_TRACE( HB_TR_DEBUG, ( "SlotsProxy signature %s", meta.signature() ) );
 
             for( int i = 0; i < parameterCount; i++ )
             {

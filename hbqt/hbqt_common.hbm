@@ -84,3 +84,4 @@
 -instpath=tests:${HB_ADDONS}/hbqt/tests/
 
 -cpp=iso11
+-debug
