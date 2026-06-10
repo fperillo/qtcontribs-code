@@ -5,6 +5,7 @@
 -hbcontainer
 
 -cpp=iso11
+-debug
 #    Generate SVN Revision Info
 #-vcshead=hbide/hbide_v.ch
 
@@ -19,33 +20,33 @@ hbqt/qtnetwork/hbqtnetwork.hbp
 
 #    Uncomment whatever module is not required
 #
-hbqt/qtlocation/hbqtlocation.hbp
-hbqt/qtmultimedia/hbqtmultimedia.hbp
-hbqt/qtmultimediawidgets/hbqtmultimediawidgets.hbp
-hbqt/qtopengl/hbqtopengl.hbp
-hbqt/qtsql/hbqtsql.hbp
-hbqt/qtsvg/hbqtsvg.hbp
-hbqt/qtxml/hbqtxml.hbp
-hbqt/qtpositioning/hbqtpositioning.hbp
-hbqt/qtwebsockets/hbqtwebsockets.hbp
-hbqt/qtbluetooth/hbqtbluetooth.hbp
-hbqt/qtqml/hbqtqml.hbp
-hbqt/qtquick/hbqtquick.hbp
-hbqt/qtsensors/hbqtsensors.hbp
-# hbqt/qtcharts/hbqtcharts.hbp
-hbqt/qzxing/hbqtzxing.hbp
+#FP hbqt/qtlocation/hbqtlocation.hbp
+#FP hbqt/qtmultimedia/hbqtmultimedia.hbp
+#FP hbqt/qtmultimediawidgets/hbqtmultimediawidgets.hbp
+#FP hbqt/qtopengl/hbqtopengl.hbp
+#FP hbqt/qtsql/hbqtsql.hbp
+#FP hbqt/qtsvg/hbqtsvg.hbp
+#FP hbqt/qtxml/hbqtxml.hbp
+#FP hbqt/qtpositioning/hbqtpositioning.hbp
+#FP hbqt/qtwebsockets/hbqtwebsockets.hbp
+#FP hbqt/qtbluetooth/hbqtbluetooth.hbp
+#FP hbqt/qtqml/hbqtqml.hbp
+#FP hbqt/qtquick/hbqtquick.hbp
+#FP hbqt/qtsensors/hbqtsensors.hbp
+#FP # hbqt/qtcharts/hbqtcharts.hbp
+#FP hbqt/qzxing/hbqtzxing.hbp
 
 
 #    Qt Based Widgets
 hbqtwidgets/hbqtwidgets.hbp
 
 #    Qt QML based Parts
-hbqtqmlparts/hbqtqmlparts.hbp
+#FP hbqtqmlparts/hbqtqmlparts.hbp
 
 
 #    Qt based Xbase++ compliant Class Framework
 #
-hbxbp/hbxbp.hbp
+#FP hbxbp/hbxbp.hbp
 
 #    Qt based Harbour IDE
 #

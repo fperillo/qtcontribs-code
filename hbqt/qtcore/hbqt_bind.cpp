@@ -609,8 +609,12 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
                {
                   HB_TRACE( HB_TR_DEBUG, ( "............... HARBOUR_DESTROYING_qt_OBJECT( %i, %i, %p, %s ) )", bind->iThreadId, iFlags, qtObject, bind->szClassName ) );
                }
+                  HB_TRACE( HB_TR_DEBUG, ( "............... PRE hbqt_bindRemoveBind( %p ) )", bind ));
                hbqt_bindRemoveBind( bind );
-               pDelFunc( qtObject, iFlags );
+                  HB_TRACE( HB_TR_DEBUG, ( "............... PRE pDelFunc( %p ) )", qtObject ) );
+	       pDelFunc( qtObject, iFlags );
+                  HB_TRACE( HB_TR_DEBUG, ( "............... AFTER pDelFunc( %p ) )", qtObject ));
+
             }
             else
             {
@@ -851,7 +855,7 @@ void hbqt_bindSwapQtObject( PHB_ITEM pSrcObject, PHB_ITEM pSwpObject )
 
 void * hbqt_bindGetQtObject( PHB_ITEM pObject )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetQtObject()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetQtObject(pObject=%p) enter", pObject ) );
 
    void * hbObject = hb_arrayId( pObject );
    void * qtObject = NULL;
@@ -864,6 +868,7 @@ void * hbqt_bindGetQtObject( PHB_ITEM pObject )
          qtObject = bind->qtObject;
       }
    }
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetQtObject(qtObject=%p) exit",qtObject ) );
    return qtObject;
 }
 
