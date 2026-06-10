@@ -6,3 +6,17 @@
 hbqt/hbqtcore.ch
 *.swp
 hbqt/hbqtgui.ch
+hbqt/hbqtbluetooth.ch
+hbqt/hbqtmultimedia.ch
+hbqt/hbqtlocation.ch
+hbqt/hbqtmultimediawidgets.ch
+hbqt/hbqtopengl.ch
+hbqt/hbqtpositioning.ch
+hbqt/hbqtqml.ch
+hbqt/hbqtquick.ch
+hbqt/hbqtsensors.ch
+hbqt/hbqtsql.ch
+hbqt/hbqtsvg.ch
+hbqt/hbqtwebsockets.ch
+hbqt/hbqtxml.ch
+hbqt/hbqtzxing.ch
