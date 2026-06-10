@@ -14,10 +14,16 @@
 #include "inkey.ch"
 #include "hbtrace.ch"
 
+#pragma -w0
+
 PROCEDURE Main()
-   LOCAL oAct, oDA, oELoop, oWnd, lExit := .F.
+   LOCAL oAct, oDA, oWnd, lExit := .F.
 
    hbqt_errorsys()
+ hb_tracestate(1)
+hb_tracefile("c:\cvs\log.log" )
+hb_tracelevel(5 )
+hb_traceflush(1)
 
    oWnd:= QMainWindow()
    oWnd:setAttribute( Qt_WA_DeleteOnClose, .F. )
@@ -37,18 +43,21 @@ PROCEDURE Main()
 
    USE testwgt.dbf NEW
 
-   oELoop := QEventLoop( oWnd )
-   DO WHILE .t.
-      oELoop:processEvents()
-      IF lExit
-         EXIT
-      ENDIF
-      oWnd:setWindowTitle( "Number of Qt Objects: " + hb_ntos( __hbqt_itemsInGlobalList() ) )
-   ENDDO
-   oELoop:exit( 0 )
+//   oELoop := QEventLoop( oWnd )
+//   DO WHILE .t.
+//      oELoop:processEvents()
+//      IF lExit
+//         EXIT
+//      ENDIF
+//      oWnd:setWindowTitle( "Number of Qt Objects: " + hb_ntos( __hbqt_itemsInGlobalList() ) )
+//   ENDDO
+//   oELoop:exit( 0 )
 
+   oWnd:activateWindow()
+   QApplication():exec()
    dbCloseAll()
 
+HB_TRACE( HB_TR_DEBUG, "SHUTTING DOWN" )
    HB_SYMBOL_UNUSED( oAct )
    RETURN
 
@@ -85,10 +94,12 @@ STATIC FUNCTION CustInfo()
    LOCAL cAddress2 := Space( 39 )
    LOCAL cAddress3 := Space( 39 )
 
+HB_TRACE( HB_TR_DEBUG, "1111" )
    oDlg := hbqtui_composite()
+HB_TRACE( HB_TR_DEBUG, "2222" )
 
-   oDlg:labelTitle:setStyleSheet( "background-color: qlineargradient(spread:pad, x1:0, y1:0.574, x2:1, y2:0, stop:0 rgba(37, 58, 122, 255), stop:1 rgba(255, 255, 255, 255));" )
-   oDlg:labelStatus:setStyleSheet( "background-color: rgb(215, 253, 255);" )
+//   oDlg:labelTitle:setStyleSheet( "background-color: qlineargradient(spread:pad, x1:0, y1:0.574, x2:1, y2:0, stop:0 rgba(37, 58, 122, 255), stop:1 rgba(255, 255, 255, 255));" )
+//   oDlg:labelStatus:setStyleSheet( "background-color: rgb(215, 253, 255);" )
 
    oDlg:listItems:addItem( "First" )
    oDlg:listItems:addItem( "Second" )
@@ -96,45 +107,62 @@ STATIC FUNCTION CustInfo()
    oDlg:listItems:addItem( "Fourth" )
    oDlg:listItems:addItem( "Fifth" )
 
-   oDlg:btnOpt1:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 1 Clicked" ) } )
-   oDlg:btnOpt2:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 2 Clicked" ) } )
-   oDlg:btnOpt3:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 3 Clicked" ) } )
-   oDlg:btnOpt4:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 4 Clicked" ) } )
+   //oDlg:btnOpt1:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 1 Clicked" ) } )
+   //oDlg:btnOpt2:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 2 Clicked" ) } )
+   //oDlg:btnOpt3:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 3 Clicked" ) } )
+   //oDlg:btnOpt4:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 4 Clicked" ) } )
 
-   @ 1,  1 QSAY "Customer No" QGET cCust PICTURE "@! "
-   @ 1, 22 QGET cCustName PICTURE "@! "
-   @ 2,  1 QSAY "Address L#1" QGET cAddress1
-   @ 3,  1 QSAY "Address L#2" QGET cAddress2
-   @ 4,  1 QSAY "Address L#3" QGET cAddress3
+//   @ 1,  1 QSAY "Customer No" QGET cCust PICTURE "@! "
+//   @ 1, 22 QGET cCustName PICTURE "@! "
+//   @ 2,  1 QSAY "Address L#1" QGET cAddress1
+//   @ 3,  1 QSAY "Address L#2" QGET cAddress2
+//   @ 4,  1 QSAY "Address L#3" QGET cAddress3
 
-   READ oDlg:groupGets LASTGETBLOCK {|| oDlg:labelStatus:setText( "Last Get Encountered, What to Do ?" ) } NOFOCUSFRAME NORESIZE
+HB_TRACE( HB_TR_DEBUG, "A003" )
 
-   oBrowse := BuildBrowse( oDlg )
+//   READ oDlg:groupGets LASTGETBLOCK {|| oDlg:labelStatus:setText( "Last Get Encountered, What to Do ?" ) } NOFOCUSFRAME NORESIZE
 
-   oDlg:connect( QEvent_Close   , {|| HbQtClearGets( oDlg:groupGets ), oBrowse:destroy() } )
-   oDlg:connect( QEvent_KeyPress, {|e| iif( e:key() == Qt_Key_Escape, Eval( {|| HbQtClearGets( oDlg:groupGets ), oBrowse:destroy() } ), NIL ) } )
+HB_TRACE( HB_TR_DEBUG, "A004" )
+//    oBrowse := BuildBrowse( oDlg )
 
+HB_TRACE( HB_TR_DEBUG, "A005" )
+//   oDlg:connect( QEvent_Close   , {|| HbQtClearGets( oDlg:groupGets ), oBrowse:destroy() } )
+//   oDlg:connect( QEvent_KeyPress, {|e| iif( e:key() == Qt_Key_Escape, Eval( {|| HbQtClearGets( oDlg:groupGets ), oBrowse:destroy() } ), NIL ) } )
+
+//   oDlg:connect( QEvent_Close   , {|| HbQtClearGets( oDlg:groupGets )} )
+//   oDlg:connect( QEvent_KeyPress, {|e| iif( e:key() == Qt_Key_Escape, Eval( {|| HbQtClearGets( oDlg:groupGets ) } ), NIL ) } )
+
+HB_TRACE( HB_TR_DEBUG, "A006" )
    kEsc := SetKey( K_ESC, {|| oDlg:close() } )
-   kIns := SetKey( K_INS, {|| ReadInsert( ! ReadInsert() ) } )
-   ReadInsert( .T. )
+//   kIns := SetKey( K_INS, {|| ReadInsert( ! ReadInsert() ) } )
+HB_TRACE( HB_TR_DEBUG, "A007" )
+//   ReadInsert( .T. )
 
-   oDlg:setWindowTitle( "Number of Qt Objects: " + hb_ntos( __hbqt_itemsInGlobalList() ) )
+HB_TRACE( HB_TR_DEBUG, "A008" )
+//    oDlg:setWindowTitle( "Number of Qt Objects: " + hb_ntos( __hbqt_itemsInGlobalList() ) )
+HB_TRACE( HB_TR_DEBUG, "A009" )
    oDlg:exec()
+HB_TRACE( HB_TR_DEBUG, "A010" )
    oDlg:destroy()
 
    SetKey( K_ESC, kEsc )
    SetKey( K_INS, kIns )
+
+//   oDlg := NIL
+
    RETURN NIL
 
-
+#define MYBROWSE
+#ifdef MYBROWSE
 STATIC FUNCTION BuildBrowse( oDlg )
    LOCAL oBrowse, i
    LOCAL aFields := { "LAST", "FIRST", "SALARY", "HIREDATE", "AGE", "CITY", "STATE", "ZIP", "NOTES" }
    LOCAL aTitles := { "Last Name", "First Name", "Salary", "Hire Date", "Age", "City", "State", "Zip", "Notes" }
 
-
+HB_TRACE( HB_TR_DEBUG, "b010" )
    oBrowse := HbQtBrowseNew( 0, 0, 0, 0, oDlg:frameBrowse, QFont( "Courier new", 10 ) )
 
+HB_TRACE( HB_TR_DEBUG, "b011" )
    oBrowse:goTopBlock          := {| | DbGoTop()        }
    oBrowse:goBottomBlock       := {| | DbGoBottom()     }
 
@@ -150,10 +178,14 @@ STATIC FUNCTION BuildBrowse( oDlg )
       oBrowse:phyPosBlock      := {| | OrdKeyNo()       }
    ENDIF
 
+HB_TRACE( HB_TR_DEBUG, "b012" )
    FOR i := 1 to len( aFields )
+
+HB_TRACE( HB_TR_DEBUG, "b012:"+str(i,3) )
       oBrowse:addColumn( HbQtColumnNew( aTitles[ i ], FieldWBlock( aFields[ i ], select() ) ) )
    NEXT
 
+HB_TRACE( HB_TR_DEBUG, "b013" )
    oBrowse:horizontalScrollbar := .T.
    oBrowse:verticalScrollbar   := .T.
    oBrowse:toolbar             := .t.
@@ -162,11 +194,13 @@ STATIC FUNCTION BuildBrowse( oDlg )
    oBrowse:skipBlock           := {|n| Skipper( n ) }
    oBrowse:navigationBlock     := {|nKey,xData,oBrw|  HandleMe( nKey, xData, oBrw, oDlg ) }
 
+HB_TRACE( HB_TR_DEBUG, "b014" )
    RETURN oBrowse
 
 
 STATIC FUNCTION HandleMe( nKey, xData, oBrw, oDlg )
-   HB_SYMBOL_UNUSED( xData + oBrw )
+   HB_SYMBOL_UNUSED( xData  )
+   HB_SYMBOL_UNUSED( oBrw )
    IF nKey == K_ESC
       oDlg:close()
       RETURN .T.
@@ -177,6 +211,7 @@ STATIC FUNCTION HandleMe( nKey, xData, oBrw, oDlg )
 STATIC FUNCTION Skipper( nSkip )
    LOCAL i := 0
 
+HB_TRACE( HB_TR_DEBUG, "SKIPPER IN" )
    DO CASE
    CASE ( nSkip = 0 .OR. LastRec() == 0 )
       dbSkip( 0 )
@@ -199,5 +234,6 @@ STATIC FUNCTION Skipper( nSkip )
       ENDDO
    ENDCASE
 
+HB_TRACE( HB_TR_DEBUG, "SKIPPER OUT" )
    RETURN i
-
+#endif
