@@ -119,7 +119,7 @@ METHOD ui_composite:destroy()
 
 //   ::oWidget                           :setParent( QWidget() )
 //   ::oWidget                           := NIL
-   ::disconnect()
+   // ::disconnect()
 
    RETURN NIL
 
