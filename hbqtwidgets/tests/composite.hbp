@@ -5,9 +5,13 @@
 -inc
 -es2
 -w3
-
+-DHB_TR_LEVEL_DEBUG
 composite.prg
-composite.ui
+# composite.ui
+#
+
+
+uic_composite.prg
 
 hbct.hbc
 
