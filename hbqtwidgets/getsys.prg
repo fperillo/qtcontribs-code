@@ -222,7 +222,7 @@ CLASS HbQtGet INHERIT GET
 
    FRIEND CLASS HbQtGetList
 
-   CLASSVAR oStyle                                INIT HBQProxyStyle()
+   CLASSVAR oStyle                                INIT NIL // HBQProxyStyle()
    CLASSVAR sl_font
 
    DATA   nKeyPressed
@@ -348,7 +348,7 @@ METHOD HbQtGet:create( oControl )
 
    IF ::cClassName == "QLINEEDIT"
    //   ::oStyle := HBQProxyStyle()
-      ::oEdit:setStyle( ::oStyle )
+      // ::oEdit:setStyle( ::oStyle )
       ::oEdit:home( .F. )
       ::positionCursor()
    ENDIF
@@ -448,10 +448,10 @@ METHOD HbQtGet:data( xData )
 METHOD HbQtGet:getList( oGetList )
    IF HB_ISOBJECT( oGetList )
       ::oGetList := oGetList
-      ::lFocusFrame := oGetList:focusFrame()
-      ::oFocusFrame := oGetList:oFocusFrame
-      ::oFocusFrame:setStyleSheet( "border: 2px solid red" )
-      ::oFocusFrame:hide()
+      //::lFocusFrame := oGetList:focusFrame()
+      //::oFocusFrame := oGetList:oFocusFrame
+      //::oFocusFrame:setStyleSheet( "border: 2px solid red" )
+      //::oFocusFrame:hide()
    ENDIF
    RETURN ::oGetList
 
@@ -468,9 +468,9 @@ METHOD HbQtGet:setFocus( nFocusReason )
 
 
 METHOD HbQtGet:manageCursor()
-   IF ! Empty( ::oStyle )
-      ::oStyle:hb_setPixelMetric( QStyle_PM_TextCursorWidth, iif( ReadInsert(), 1, ::nCharWidth ) )
-   ENDIF
+   //IF ! Empty( ::oStyle )
+   //   ::oStyle:hb_setPixelMetric( QStyle_PM_TextCursorWidth, iif( ReadInsert(), 1, ::nCharWidth ) )
+   //ENDIF
    RETURN Self
 
 

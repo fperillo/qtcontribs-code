@@ -126,7 +126,7 @@ FUNCTION __hbqtBindGetList( oWnd, GetList )
          oGetList := t_GetList[ n,2 ]
          hb_ADel( t_GetList, n, .T. )
 
-         oGetList:oFocusFrame:setParent( QWidget() )
+         // oGetList:oFocusFrame:setParent( QWidget() )
          FOR EACH oGet IN oGetList:getList()
             oGet:destroy()
             oGet := NIL
@@ -419,7 +419,7 @@ CLASS HbQtGetList INHERIT HbGetList
    METHOD lastGetBlock( bBlock )                  SETGET
    METHOD terminate()                             INLINE iif( HB_ISBLOCK( ::bOnLastGet ), Eval( ::bOnLastGet, NIL ), NIL )
 
-   CLASSVAR oFocusFrame                           INIT QFocusFrame()
+   CLASSVAR oFocusFrame                           INIT NIL // QFocusFrame()
 
    DATA   lFocusFrame                             INIT .T.
    METHOD focusFrame                              SETGET
@@ -438,7 +438,7 @@ METHOD HbQtGetList:init( aGetList )
       ::oFocusFrame := QFocusFrame()
    ENDIF
 #endif
-   ::oFocusFrame:setStyleSheet( "border: 1px solid red;" )
+   //::oFocusFrame:setStyleSheet( "border: 1px solid red;" )
 
    RETURN Self
 
