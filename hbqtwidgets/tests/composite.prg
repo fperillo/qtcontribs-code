@@ -107,10 +107,10 @@ HB_TRACE( HB_TR_DEBUG, "2222" )
    oDlg:listItems:addItem( "Fourth" )
    oDlg:listItems:addItem( "Fifth" )
 
-   //oDlg:btnOpt1:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 1 Clicked" ) } )
-   //oDlg:btnOpt2:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 2 Clicked" ) } )
-   //oDlg:btnOpt3:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 3 Clicked" ) } )
-   //oDlg:btnOpt4:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 4 Clicked" ) } )
+   oDlg:btnOpt1:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 1 Clicked" ) } )
+   oDlg:btnOpt2:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 2 Clicked" ) } )
+   oDlg:btnOpt3:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 3 Clicked" ) } )
+   oDlg:btnOpt4:connect( "clicked()", {|| oDlg:labelStatus:setText( "Option 4 Clicked" ) } )
 
 //   @ 1,  1 QSAY "Customer No" QGET cCust PICTURE "@! "
 //   @ 1, 22 QGET cCustName PICTURE "@! "
@@ -139,7 +139,7 @@ HB_TRACE( HB_TR_DEBUG, "A007" )
 //   ReadInsert( .T. )
 
 HB_TRACE( HB_TR_DEBUG, "A008" )
-//    oDlg:setWindowTitle( "Number of Qt Objects: " + hb_ntos( __hbqt_itemsInGlobalList() ) )
+    oDlg:setWindowTitle( "Number of Qt Objects: " + hb_ntos( __hbqt_itemsInGlobalList() ) )
 HB_TRACE( HB_TR_DEBUG, "A009" )
    oDlg:exec()
 HB_TRACE( HB_TR_DEBUG, "A010" )

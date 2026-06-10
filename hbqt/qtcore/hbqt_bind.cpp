@@ -568,6 +568,9 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
 
          if( isQObject )
          {
+		 HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect PRE") );
+	    hbqt_bindDelEvents( pObject );
+		 HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect POST") );
             qObject = ( QObject * ) qtObject;
          }
          if( pDelFunc != NULL )
@@ -656,10 +659,16 @@ void hbqt_bindDestroyQtObject( void * qtObject, QObject * qObject )
          {
             qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
          }
+	 if ( bind->iFlags & HBQT_BIT_QOBJECT )
+	 {
+	    PHB_ITEM pObject = NULL;
+	    pObject = hb_arrayFromId( NULL, bind->hbObject );
+            hbqt_bindDelEvents( pObject );
+	 }
          hbqt_bindRemoveBind( bind );
       }
    }
-   HB_TRACE( HB_TR_DEBUG, ( ".........QT_DESTROY_ENDS...............%p %p", qtObject, qObject ) );
+   HB_TRACE( HB_TR_DEBUG, ( ".........QT_DESTROYS_ENDS...............%p %p", qtObject, qObject ) );
 }
 
 static void hbqt_bindDestroyQtObjectA( void * qtObject, QObject * qObject )
@@ -1072,7 +1081,7 @@ void hbqt_bindDelEvents( PHB_ITEM pSenderObject )
    {
       if( hb_vmRequestReenter() )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindDelEvents( PHB_ITEM pSenderObject    0 %p )", pSenderObject ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindDelEvents( %p )", pSenderObject ) );
          hb_vmPushDynSym( s_dynsym___EVENTS );
          hb_vmPush( pSenderObject );
          hb_vmSend( 0 );
@@ -1190,7 +1199,7 @@ int __hbqt_bindItemsInGlobalList( void )
    while( bind )
    {
       i++;
-      HB_TRACE( HB_TR_DEBUG, ( "_____OnExit______( %p, %s )", bind->qtObject, bind->szClassName ) );
+      HB_TRACE( HB_TR_DEBUG, ( "_____InGlobalList______( %p, %s )", bind->qtObject, bind->szClassName ) );
       bind = bind->next;
    }
    HBQT_BIND_UNLOCK
