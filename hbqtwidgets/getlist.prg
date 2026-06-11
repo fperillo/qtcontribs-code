@@ -75,7 +75,7 @@ FUNCTION __hbqtGetsActiveWindow( oWindow )
 
 FUNCTION HbQtClearGets( oWnd, ... )
    LOCAL oParent
-
+   HB_TRACE( HB_TR_DEBUG, "HbQtClearGets params="+hb_ntos(pcount()))
    __hbqtBindGetList( oWnd, NIL )
    FOR EACH oParent IN hb_AParams()
       __hbqtBindGetList( oParent, NIL )
@@ -111,11 +111,12 @@ FUNCTION __hbqtBindGetList( oWnd, GetList )
 
    THREAD STATIC t_GetList := {}
 
+   HB_TRACE( HB_TR_DEBUG, ( "__hbqtBindGetList  ENTER"))
    IF HB_ISOBJECT( oWnd )
       IF ( n := AScan( t_GetList, {|e_| e_[ 1 ] == oWnd } ) ) > 0
          oGetList := t_GetList[ n, 2 ]
       ENDIF
-      HB_TRACE( HB_TR_DEBUG, n, oWnd:className() )
+      HB_TRACE( HB_TR_DEBUG, ( "__hbqtBindGetList  n=" + hb_nots(n)+ "  class="+oWnd:className() ))
       IF HB_ISOBJECT( GetList )
          IF n > 0
             t_GetList[ n, 2 ] := GetList

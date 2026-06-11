@@ -177,6 +177,7 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
 
    if( object )
    {
+	  HB_TRACE( HB_TR_DEBUG, ( "eventFilter fired !" ) );
       QEvent::Type eventtype = event->type();
       if( ( int ) eventtype > 0 )
       {
@@ -231,6 +232,7 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
             }
          }
       }
+	  HB_TRACE( HB_TR_DEBUG, ( "eventFilter fired completed!" ) );
    }
    return stopTheEventChain;
 }
