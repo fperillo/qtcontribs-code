@@ -151,7 +151,7 @@ METHOD HbQtObjectHandler:isConnected( cnEvent )
 
 METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
    LOCAL nResult
-
+HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:connect" )
    ::initialize()
    IF ! __objDerivedFrom( Self, "QOBJECT" )
       RETURN .f.
