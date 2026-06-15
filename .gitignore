@@ -3,3 +3,7 @@
 **/*.exe
 **/*~
 **/*.hbx
+hbqt/hbqtgui.ch
+*.swp
+hbqtwidgets/tests/hb_out.log
+hbqtwidgets/tests/hb_out.log
