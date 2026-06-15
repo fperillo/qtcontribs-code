@@ -177,12 +177,14 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
 
    if( object )
    {
-	  HB_TRACE( HB_TR_DEBUG, ( "eventFilter fired !" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "eventFilter fired !" ) );
       QEvent::Type eventtype = event->type();
+      HB_TRACE( HB_TR_DEBUG, ( "eventFilter eventtype %d", (int) eventtype ) );
       if( ( int ) eventtype > 0 )
       {
          char szParams[ 20 ];
          hb_snprintf( szParams, sizeof( szParams ), "EVENT_%d", ( int ) eventtype );
+      HB_TRACE( HB_TR_DEBUG, ( "eventFilter szParams %s", szParams ) );
          if( object->property( szParams ).toInt() > 0 )
          {
             if( hb_vmRequestReenter() )

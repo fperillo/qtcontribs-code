@@ -455,6 +455,8 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
    int id = hbqt_bindGetThreadData()->iThreadId;
    bool isQObject = iFlags & HBQT_BIT_QOBJECT;
 
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject szClassName=%p", szClassName ) );
+
    if( iFlags & HBQT_BIT_QOBJECT )
    {
       char * pname = ( char * ) hb_xgrab( 200 );
