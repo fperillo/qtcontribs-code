@@ -58,7 +58,7 @@ QMetaProperty.qth
 QMetaType.qth
 QMimeData.qth
 QModelIndex.qth
-QMutex.qth
+#QMutex.qth
 QObject.qth
 QParallelAnimationGroup.qth
 QPauseAnimation.qth
