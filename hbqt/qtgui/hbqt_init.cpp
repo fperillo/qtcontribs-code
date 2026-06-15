@@ -736,6 +736,7 @@ void _hbqtgui_force_link_for_event( void )
 
 static void hbqt_registerCallbacks( void )
 {
+	 
    hbqt_slots_register_callback( "QColor"                                    , hbqt_SlotsExecQColor                           );
    hbqt_slots_register_callback( "QPen"                                      , hbqt_SlotsExecQPen                             );
    hbqt_slots_register_callback( "QBrush"                                    , hbqt_SlotsExecQBrush                           );
@@ -767,6 +768,7 @@ static void hbqt_registerCallbacks( void )
 #if QT_VERSION >= 0x050000
    hbqt_slots_register_callback( "QScrollerProperties"                       , hbqt_SlotsExecQScrollerProperties              );
 #endif
+#if 0
    hbqt_events_register_createobj( QEvent::MouseButtonPress                  , "hb_QMouseEvent"                    );
    hbqt_events_register_createobj( QEvent::MouseButtonRelease                , "hb_QMouseEvent"                    );
    hbqt_events_register_createobj( QEvent::MouseButtonDblClick               , "hb_QMouseEvent"                    );
@@ -916,6 +918,7 @@ static void hbqt_registerCallbacks( void )
    hbqt_events_register_createobj( QEvent::InputMethodQuery                  , "hb_QInputMethodQueryEvent"         );
    hbqt_events_register_createobj( QEvent::Expose                            , "hb_QEvent"                         );
    hbqt_events_register_createobj( QEvent::ApplicationStateChange            , "hb_QEvent"                         );
+#endif
 #endif
 }
 
