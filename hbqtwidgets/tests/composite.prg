@@ -77,14 +77,14 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oMenu:setTitle( "Customer Info" )
 
    oAct := oMenu:addAction( "Customer Info")
-   oAct:connect( "triggered(bool)", { || CustInfo() } )
+   oAct:connect( "triggered(bool)", { || CustInfo(oWnd) } )
 
    oMenuBar:addMenu( oMenu )
 
    RETURN oAct
 
 
-STATIC FUNCTION CustInfo()
+STATIC FUNCTION CustInfo(oWnd)
    LOCAL oBrowse, oDlg, kEsc, kIns
 
    LOCAL GetList := {}, SayList := {}
@@ -95,7 +95,7 @@ STATIC FUNCTION CustInfo()
    LOCAL cAddress3 := Space( 39 )
 
 HB_TRACE( HB_TR_DEBUG, "1111" )
-   oDlg := hbqtui_composite()
+   oDlg := hbqtui_composite(oWnd)
 HB_TRACE( HB_TR_DEBUG, "2222" )
 
 //   oDlg:labelTitle:setStyleSheet( "background-color: qlineargradient(spread:pad, x1:0, y1:0.574, x2:1, y2:0, stop:0 rgba(37, 58, 122, 255), stop:1 rgba(255, 255, 255, 255));" )
