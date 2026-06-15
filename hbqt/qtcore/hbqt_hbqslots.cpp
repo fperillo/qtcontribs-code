@@ -211,6 +211,7 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
 
 int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
 {
+	 HB_TRACE( HB_TR_DEBUG, ( "qt_metacall" ) );
    id = QObject::qt_metacall( c, id, arguments );
    if( id < 0 || c != QMetaObject::InvokeMetaMethod )
       return id;
@@ -307,6 +308,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
          hb_vmRequestRestore();
       }
    }
+	 HB_TRACE( HB_TR_DEBUG, ( "qt_metacall exit" ) );
    return -1;
 }
 
