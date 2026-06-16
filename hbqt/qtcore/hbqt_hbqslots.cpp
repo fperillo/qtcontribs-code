@@ -410,7 +410,7 @@ int hbqt_QtDisconnect( QObject * sender, const char * pszSignal, QObject * recei
 HB_FUNC( HBQT_CONNECT )
 {
    int ret = -1;
-
+HB_TRACE( HB_TR_DEBUG, ("HBQT_CONNECT") );
    if( hb_pcount() == 4 && HB_ISCHAR( 2 ) && HB_ISCHAR( 4 ) && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) && hbqt_par_isDerivedFrom( 3, "QOBJECT" ) )
    {
       void * pText01 = NULL;

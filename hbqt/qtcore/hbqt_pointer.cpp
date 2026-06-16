@@ -222,12 +222,17 @@ PHB_ITEM hbqt_defineClassBegin( const char * pszClsName, PHB_ITEM s_oClass, cons
 
       oClass = hb_itemNew( hb_stackReturnItem() );
 
+      HB_TRACE( HB_TR_DEBUG, ("%s: dCB 4", pszClsName ) );
       hb_itemRelease( pSym_ClsFunc );
+      HB_TRACE( HB_TR_DEBUG, ("%s: dCB 5", pszClsName ) );
       hb_itemRelease( pSuper );
+      HB_TRACE( HB_TR_DEBUG, ("%s: dCB 6", pszClsName ) );
       hb_itemRelease( pClsName );
+      HB_TRACE( HB_TR_DEBUG, ("%s: dCB 7", pszClsName ) );
 
       hb_objSendMsg( oClass, "CREATE", 0 );
       hb_objSendMsg( oClass, "INSTANCE", 0 );
+      HB_TRACE( HB_TR_DEBUG, ("%s: dCB 8", pszClsName ) );
    }
 
    return oClass;
@@ -249,6 +254,7 @@ void hbqt_defineClassEnd( PHB_ITEM s_oClass, PHB_ITEM oClass )
       hb_vmDo( 2 );
 
       hb_itemRelease( oClass );
+      HB_TRACE( HB_TR_DEBUG, ("hbqt_defineClassEnd" ) );
    }
 }
 

@@ -157,6 +157,7 @@ HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:connect" )
       RETURN .f.
    ENDIF
 
+HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:connect 2" )
    IF ! HB_ISBLOCK( bBlock )
       RETURN .f.
    ENDIF
