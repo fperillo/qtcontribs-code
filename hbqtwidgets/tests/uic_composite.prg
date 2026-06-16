@@ -87,7 +87,7 @@ METHOD ui_composite:popolate(oParent)
    ::labelStatus                       :  setObjectName( e"labelStatus" )
    ::labelStatus                       :  setGeometry( QRect( 20, 484, 351, 16 ) )
    ::labelStatus                       :  setAlignment( Qt_AlignCenter )
-   ::labelStatus:SetText( "status_label" )
+   ::labelStatus:SetText( "I'm a detached Qt Object !!!" )
    ::labelStatus := NIL
    // ::retranslate( ::Dialog )
 
