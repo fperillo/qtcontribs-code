@@ -207,12 +207,15 @@ HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:connect" )
 METHOD HbQtObjectHandler:disconnect( cnEvent )
    LOCAL hEvent, xKey, nResult := 0
 
+HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:disconnect" ) 
    ::initialize()
    IF ! __objDerivedFrom( Self, "QOBJECT" )
       RETURN .f.
    ENDIF
 
    IF PCount() == 0                               // Intent is to disconnect all connections.
+
+HB_TRACE( HB_TR_DEBUG, "DISCONNECT ALL" ) 
       IF ! Empty( ::__hEvents )
          FOR EACH hEvent IN ::__hEvents
             xKey := hEvent:__enumKey()
