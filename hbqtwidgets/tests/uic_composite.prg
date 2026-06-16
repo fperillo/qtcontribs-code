@@ -87,6 +87,8 @@ METHOD ui_composite:popolate(oParent)
    ::labelStatus                       :  setObjectName( e"labelStatus" )
    ::labelStatus                       :  setGeometry( QRect( 20, 484, 351, 16 ) )
    ::labelStatus                       :  setAlignment( Qt_AlignCenter )
+   ::labelStatus:SetText( "status_label" )
+   ::labelStatus := NIL
    // ::retranslate( ::Dialog )
 
    RETURN Self
@@ -111,7 +113,9 @@ METHOD ui_composite:destroy()
    ::groupGets                         := NIL
    ::frameBrowse                       := NIL
    ::listItems                         := NIL
+HB_TRACE( HB_TR_DEBUG, "PRE BUTTON1" )
    ::btnOpt1                           := NIL
+HB_TRACE( HB_TR_DEBUG, "POST BUTTON1" )
    ::btnOpt2                           := NIL
    ::btnOpt3                           := NIL
    ::btnOpt4                           := NIL
