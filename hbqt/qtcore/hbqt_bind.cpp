@@ -614,6 +614,7 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
                   if( bind->fEventFilterInstalled )
                   {
                      qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
+		     bind->fEventFilterInstalled = false;
                   }
 	          HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect PRE") );
 	          hbqt_bindDelEvents( pObject );
@@ -706,6 +707,7 @@ void hbqt_bindZapHbObject( PHB_ITEM pObject )
                   if( bind->fEventFilterInstalled )
                   {
                      qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
+		     bind->fEventFilterInstalled = false;
                   }
 	          HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect PRE") );
 	          hbqt_bindDelEvents( pObject );
@@ -765,6 +767,7 @@ void hbqt_bindDestroyQtObject( void * qtObject, QObject * qObject )
          if( bind->fEventFilterInstalled )
          {
             qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
+            bind->fEventFilterInstalled = false;
          }
 	 if ( bind->iFlags & HBQT_BIT_QOBJECT )
 	 {
@@ -793,6 +796,7 @@ static void hbqt_bindDestroyQtObjectA( void * qtObject, QObject * qObject )
          if( bind->fEventFilterInstalled )
          {
             qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
+            bind->fEventFilterInstalled = false;
          }
 
          int iFlags = bind->iFlags;
