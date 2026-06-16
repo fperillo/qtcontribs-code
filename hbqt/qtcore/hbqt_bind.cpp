@@ -524,7 +524,7 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
             QObject * obj = ( QObject * ) qtObject;
             QString className = ( QString ) obj->metaObject()->className();
 
-            //if( bind->iFlags & HBQT_BIT_OWNER )
+            if( bind->iFlags & HBQT_BIT_OWNER )
             {
                QObject::connect( obj, SIGNAL( destroyed(QObject*) ), hbqt_bindGetThreadData()->pDestroyer, SLOT( destroyer(QObject*) ) );
             }
@@ -553,14 +553,14 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
    void * hbObject = hb_arrayId( pObject );
    if( hbObject )
    {
-      //HB_TRACE( HB_TR_DEBUG, ( ".........HARBOUR_DESTROY_BEGINS..........." ) );
+      HB_TRACE( HB_TR_DEBUG, ( ".........HARBOUR_DESTROY_BEGINS........... PHB_ITEM=%p", pObject ) );
 
       PHBQT_BIND bind = hbqt_bindGetBindByHbObject( hbObject );
       if( bind != NULL )
       {
          void * qtObject         = bind->qtObject;
 
-         HB_TRACE( HB_TR_DEBUG, ( ".........HARBOUR_DESTROY_BEGINS( qtObject: %p )", qtObject ) );
+         HB_TRACE( HB_TR_DEBUG, ( ".........HARBOUR_DESTROY_BEGINS( qtObject: %p szClassName=%s)", qtObject,bind->szClassName ) );
          int iFlags              = bind->iFlags;
          PHBQT_DEL_FUNC pDelFunc = bind->pDelFunc;
 
@@ -570,11 +570,12 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
 
          if( isQObject )
          {
-		 HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect PRE") );
-	    hbqt_bindDelEvents( pObject );
-		 HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect POST") );
+	    //HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect PRE") );
+	    //hbqt_bindDelEvents( pObject );
+	    //HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect POST") );
             qObject = ( QObject * ) qtObject;
          }
+
          if( pDelFunc != NULL )
          {
             if( iFlags & HBQT_BIT_OWNER )
@@ -593,40 +594,50 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
             }
          }
 
+         HB_TRACE( HB_TR_DEBUG, ( "00..........HARBOUR_DESTROY_BEGINS( fDelQtObject=%d )", fDelQtObject ) );
+
+
          if( isQObject )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "............HARBOUR_DESTROY_BEGINS( %i, %i, %p, %s ) )", bind->iThreadId, iFlags, qtObject, bind->szClassName ) );
+            HB_TRACE( HB_TR_DEBUG, ( "01..........HARBOUR_DESTROY_BEGINS( %i, %i, %p, %s ) )", bind->iThreadId, iFlags, qtObject, bind->szClassName ) );
          }
+
          if( iFlags & HBQT_BIT_OWNER )
          {
             if( fDelQtObject )
             {
                if( isQObject )
                {
-                  HB_TRACE( HB_TR_DEBUG, ( "............... HARBOUR_DESTROYING_qt_q_OBJECT( %i, %i, %p, %s ) )", bind->iThreadId, iFlags, qtObject, bind->szClassName ) );
+                  HB_TRACE( HB_TR_DEBUG, ( "02.start....... HARBOUR_DESTROYING_qt_q_OBJECT( %i, %i (BIT_OWNER), %p, %s ) )", bind->iThreadId, iFlags, qtObject, bind->szClassName ) );
                   qObject->disconnect();
                   if( bind->fEventFilterInstalled )
                   {
                      qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
                   }
+	          HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect PRE") );
+	          hbqt_bindDelEvents( pObject );
+	          HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect POST") );
+                  HB_TRACE( HB_TR_DEBUG, ( "02.stop ....... HARBOUR_DESTROYING_qt_q_OBJECT( %i, %i (BIT_OWNER), %p, %s ) )", bind->iThreadId, iFlags, qtObject, bind->szClassName ) );
                }
                else
                {
-                  HB_TRACE( HB_TR_DEBUG, ( "............... HARBOUR_DESTROYING_qt_OBJECT( %i, %i, %p, %s ) )", bind->iThreadId, iFlags, qtObject, bind->szClassName ) );
+                  HB_TRACE( HB_TR_DEBUG, ( "03............. HARBOUR_DESTROYING_qt_OBJECT( %i, %i, %p, %s ) DO NOTHING", bind->iThreadId, iFlags, qtObject, bind->szClassName ) );
                }
-                  HB_TRACE( HB_TR_DEBUG, ( "............... PRE hbqt_bindRemoveBind( %p ) )", bind ));
+               HB_TRACE( HB_TR_DEBUG, ( "03a............. PRE hbqt_bindRemoveBind( %p ) )", bind ));
                hbqt_bindRemoveBind( bind );
-                  HB_TRACE( HB_TR_DEBUG, ( "............... PRE pDelFunc( %p ) )", qtObject ) );
+               HB_TRACE( HB_TR_DEBUG, ( "03b............. PRE pDelFunc( %p ) )", qtObject ) );
 	       pDelFunc( qtObject, iFlags );
-                  HB_TRACE( HB_TR_DEBUG, ( "............... AFTER pDelFunc( %p ) )", qtObject ));
+               HB_TRACE( HB_TR_DEBUG, ( "03c............. AFTER pDelFunc( %p ) )", qtObject ));
 
             }
             else
             {
                if( isQObject )
                {
-                  HB_TRACE( HB_TR_DEBUG, ( "............... HARBOUR_DESTROYING_not-qt-but-only-hb_OBJECT( %i, %i, %p, %s ) )", bind->iThreadId, iFlags, qtObject, bind->szClassName ) );
+                  HB_TRACE( HB_TR_DEBUG, ( "04............. HARBOUR_DESTROYING_not-qt-but-only-hb_OBJECT( %i, %i, %p, %s ) isQObject=TRUE fDelQtObject=FALSE", bind->iThreadId, iFlags, qtObject, bind->szClassName ) );
                   hbqt_bindRemoveBind( bind );  /*  MUST HAVE : hb_arrayFromId() returns NIL onto retained object as such  */
+		  qObject->disconnect( SIGNAL( destroyed(QObject*) ) );
+// 				  QObject::connect( obj, SIGNAL( destroyed(QObject*) ), hbqt_bindGetThreadData()->pDestroyer, SLOT( destroyer(QObject*) ) );
                }
             }
          }
@@ -634,13 +645,13 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
          {
             if( isQObject )
             {
-               HB_TRACE( HB_TR_DEBUG, ( "...............HARBOUR_DESTROYING_hb_OBJECT( %i, %i, %p, %s ) )", bind->iThreadId, iFlags, qtObject, bind->szClassName ) );
+               HB_TRACE( HB_TR_DEBUG, ( "05.............HARBOUR_DESTROYING_hb_OBJECT( %i, %i, %p, %s ) )", bind->iThreadId, iFlags, qtObject, bind->szClassName ) );
             }
             hbqt_bindRemoveBind( bind );
          }
-         HB_TRACE( HB_TR_DEBUG, ( ".........HARBOUR_DESTROY_ENDS( qtObject: %p )", qtObject ) );
+         HB_TRACE( HB_TR_DEBUG, ( "89.......HARBOUR_DESTROY_ENDS( qtObject: %p )", qtObject ) );
       }
-      //HB_TRACE( HB_TR_DEBUG, ( ".........HARBOUR_DESTROY_ENDS..........." ) );
+      HB_TRACE( HB_TR_DEBUG, ( "99.......HARBOUR_DESTROY_ENDS..........." ) );
    }
 }
 
@@ -1135,7 +1146,7 @@ HB_FUNC( __HBQT_DESTROY )
    PHB_ITEM pObject = hb_stackSelfItem();
    if( pObject )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "... HbQtObjectHandler( DESTRUCTOR FUNCTION __hbqt_destroy() - %s ) ...", hb_objGetClsName( pObject ) ) );
+      HB_TRACE( HB_TR_DEBUG, ( "... HbQtObjectHandler( DESTRUCTOR FUNCTION __hbqt_destroy() - PHB_ITEM=%p -> %s ) ...", pObject, hb_objGetClsName( pObject ) ) );
       hbqt_bindDestroyHbObject( pObject );
    }
 }
