@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+
+-inc
+-es2
+-w3
+
+-DHB_TR_LEVEL_DEBUG
+comp02.prg
+
