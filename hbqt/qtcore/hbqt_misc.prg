@@ -52,6 +52,7 @@
 #include "error.ch"
 #include "hbtrace.ch"
 
+#define  HB_TR_LEVEL_DEBUG
 
 CREATE CLASS HbQtObjectHandler
 
@@ -80,6 +81,7 @@ CREATE CLASS HbQtObjectHandler
 
 
 METHOD HbQtObjectHandler:initialize()
+HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:initialize" )
    IF Empty( ::__hEvents )
       ::__hEvents := {=>}
       hb_HCaseMatch( ::__hEvents, .F. )
@@ -98,6 +100,7 @@ METHOD HbQtObjectHandler:findChild( cObjectName )
 
 METHOD HbQtObjectHandler:setSlots()
 
+HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:setSlots" )
    IF empty( ::__Slots )
       ::__Slots := { => }
       hb_hDefault( ::__Slots, {} )
@@ -107,6 +110,7 @@ METHOD HbQtObjectHandler:setSlots()
 
 
 METHOD HbQtObjectHandler:setEvents()
+HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:setEvents" )
 
    IF empty( ::__Events )
       ::__Events := { => }
