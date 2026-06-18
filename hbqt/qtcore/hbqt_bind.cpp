@@ -572,7 +572,8 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
          if( isQObject )
          {
 	    //HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect PRE") );
-	    //hbqt_bindDelEvents( pObject );
+	    hbqt_bindDelEvents( pObject );
+	    hbqt_bindDelSlots( pObject );
 	    //HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect POST") );
             qObject = ( QObject * ) qtObject;
          }
@@ -618,6 +619,7 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
                   }
 	          HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect PRE") );
 	          hbqt_bindDelEvents( pObject );
+	          hbqt_bindDelSlots( pObject );
 	          HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect POST") );
                   HB_TRACE( HB_TR_DEBUG, ( "02.stop ....... HARBOUR_DESTROYING_qt_q_OBJECT( %i, %i (BIT_OWNER), %p, %s ) )", bind->iThreadId, iFlags, qtObject, bind->szClassName ) );
                }
@@ -711,6 +713,7 @@ void hbqt_bindZapHbObject( PHB_ITEM pObject )
                   }
 	          HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect PRE") );
 	          hbqt_bindDelEvents( pObject );
+	          hbqt_bindDelSlots( pObject );
 	          HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect POST") );
                   HB_TRACE( HB_TR_DEBUG, ( "02.stop ....ZapHbObject_qt_q_OBJECT( %i, %i (BIT_OWNER), %p, %s ) )", bind->iThreadId, iFlags, qtObject, bind->szClassName ) );
                }
@@ -774,6 +777,7 @@ void hbqt_bindDestroyQtObject( void * qtObject, QObject * qObject )
 	    PHB_ITEM pObject = NULL;
 	    pObject = hb_arrayFromId( NULL, bind->hbObject );
             hbqt_bindDelEvents( pObject );
+            hbqt_bindDelSlots( pObject );
 	 }
          hbqt_bindRemoveBind( bind );
       }
@@ -1065,11 +1069,16 @@ void hbqt_bindDelSlot( PHB_ITEM pSenderObject, int iSignalid, PHB_ITEM pCode )
                   {
                      hb_arrayDel( pArray, nPos );
                      hb_arraySize( pArray, hb_arrayLen( pArray ) - 1 );
+                     HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindDelSlot arrayLen=%d", (int) hb_arrayLen(pArray) ) );
                      break;
                   }
                }
             }
          }
+	 else 
+	 {
+             HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindDelSlot DO NOTHING !!!!" ) );
+	 }
       }
       hb_vmRequestRestore();
    }
