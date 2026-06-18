@@ -52,7 +52,8 @@
 #include "error.ch"
 #include "hbtrace.ch"
 
-#define  HB_TR_LEVEL_DEBUG
+// #define  HB_TR_LEVEL_DEBUG
+// #define HB_TR_LEVEL HB_TR_DEBUG
 
 CREATE CLASS HbQtObjectHandler
 
@@ -161,12 +162,12 @@ HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:connect" )
       RETURN .f.
    ENDIF
 
-HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:connect 2" )
    IF ! HB_ISBLOCK( bBlock )
       RETURN .f.
    ENDIF
 
    IF hb_hHasKey( ::__hEvents, cnEvent )
+      HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:connect already present, disconnect first" )
       IF HB_ISNUMERIC( ::__hEvents[ cnEvent ] )
          hbqt_disconnectEvent( Self, cnEvent )
       ELSE
@@ -177,6 +178,7 @@ HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:connect 2" )
 
    SWITCH ValType( cnEvent )
    CASE "C"
+      HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:connect string:"+cnEvent )
       nResult := hbqt_connect( Self, cnEvent, bBlock )
 
       SWITCH nResult
@@ -189,6 +191,7 @@ HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:connect 2" )
       EXIT
 
    CASE "N"
+      HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:connect numeric:"+str(cnEvent) )
       nResult := hbqt_connectEvent( Self, cnEvent, bBlock )
 
       SWITCH nResult
@@ -220,14 +223,14 @@ HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:disconnect" )
 
    IF PCount() == 0                               // Intent is to disconnect all connections.
 
-HB_TRACE( HB_TR_DEBUG, "DISCONNECT ALL" ) 
+      HB_TRACE( HB_TR_DEBUG, "DISCONNECT ALL" ) 
       IF ! Empty( ::__hEvents )
          FOR EACH hEvent IN ::__hEvents
             xKey := hEvent:__enumKey()
             IF HB_ISNUMERIC( xKey )
                hbqt_disconnectEvent( Self, xKey )
             ELSE
-               hbqt_disconnect( Self, xKey )
+               hbqt_disconnectbis( Self, xKey )
             ENDIF
             ::__hEvents[ xKey ] := NIL
          NEXT
