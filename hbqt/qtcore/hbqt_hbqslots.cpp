@@ -113,13 +113,14 @@ HBQSlots::~HBQSlots()
 
 int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s )", pszSignal ) );
+   HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( pObj=%p signal=%s )", pObj, pszSignal ) );
 
    int nResult = 1;
 
    if( true )
    {
       QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
+      HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( QObject=%p )", object ) );
       if( object )
       {
          if( hb_itemType( bBlock ) & HB_IT_BLOCK )
@@ -143,6 +144,7 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
                            nResult = 0;
 
                            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %p, %s, %i )", object, pszSignal, signalId ) );
+                     //      HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect   QMetaObject::className=%s", QMetaObject::className() ) );
                            hbqt_bindAddSlot( pObj, signalId, bBlock );
                         }
                         else
@@ -172,17 +174,19 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
 
 int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s )", pszSignal ) );
+   HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( pObj=%p signal=%s )", pObj, pszSignal ) );
 
    int nResult = 1;
 
    QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
+   HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( QObject=%p )", object ) );
    if( object )
    {
       QString signal = pszSignal;
-      QByteArray theSignal = signal.toLatin1();
+      QByteArray theSignal = QMetaObject::normalizedSignature( signal.toLatin1() );
 
-      int signalId = object->metaObject()->indexOfSignal( QMetaObject::normalizedSignature( theSignal ) );
+//                           HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect   QMetaObject::className=%s", QMetaObject::className() ) );
+      int signalId = object->metaObject()->indexOfSignal( theSignal );
       if( signalId != -1 )
       {
          if( QMetaObject::disconnect( object, signalId, 0, 0 ) )
@@ -205,6 +209,7 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
    else
       nResult = 2;
 
+   HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect return %d", nResult ) );
    return nResult;
 }
 
@@ -410,7 +415,7 @@ int hbqt_QtDisconnect( QObject * sender, const char * pszSignal, QObject * recei
 HB_FUNC( HBQT_CONNECT )
 {
    int ret = -1;
-HB_TRACE( HB_TR_DEBUG, ("HBQT_CONNECT") );
+   HB_TRACE( HB_TR_DEBUG, ("HBQT_CONNECT pCount=%d", hb_pcount() ) );
    if( hb_pcount() == 4 && HB_ISCHAR( 2 ) && HB_ISCHAR( 4 ) && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) && hbqt_par_isDerivedFrom( 3, "QOBJECT" ) )
    {
       void * pText01 = NULL;
@@ -456,6 +461,29 @@ HB_FUNC( HBQT_DISCONNECT )
    HB_TRACE( HB_TR_DEBUG, ( "exits HBQT_DISCONNECT" ) );
    hb_retni( ret );
 }
+
+HB_FUNC( HBQT_DISCONNECTBIS )
+{
+	   int ret = -1;
+
+     HB_TRACE( HB_TR_DEBUG, ( "enters HBQT_DISCONNECTBIS" ) );
+     if( hb_pcount() == 2 && HB_ISCHAR( 2 ) && hbqt_par_isDerivedFrom( 1, "QOBJECT" )  )
+    {
+         HBQSlots * receiverSlots = hbqt_bindGetReceiverSlotsByHbObject( hb_param( 1, HB_IT_OBJECT ) );
+	        if( receiverSlots )
+		      {
+               void * pText01 = NULL;
+                ret = receiverSlots->hbDisconnect( hb_param( 1, HB_IT_OBJECT ), ( char * ) hb_parstr_utf8( 2, &pText01, NULL ) );
+         hb_strfree( pText01 );
+		       }
+   }
+    else
+          hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+
+    HB_TRACE( HB_TR_DEBUG, ( "exits HBQT_DISCONNECTBIS" ) );
+    hb_retni( ret );
+}
+
 
 static void hbqt_lib_init( void * cargo )
 {
