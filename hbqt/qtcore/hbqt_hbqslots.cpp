@@ -182,34 +182,46 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
    HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( QObject=%p )", object ) );
    if( object )
    {
-      QString signal = pszSignal;
-      QByteArray theSignal = QMetaObject::normalizedSignature( signal.toLatin1() );
+      if( pszSignal )
+      {
+         QString signal = pszSignal;
+         QByteArray theSignal = QMetaObject::normalizedSignature( signal.toLatin1() );
 
 //                           HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect   QMetaObject::className=%s", QMetaObject::className() ) );
-      int signalId = object->metaObject()->indexOfSignal( theSignal );
-      if( signalId != -1 )
-      {
-         if( QMetaObject::disconnect( object, signalId, 0, 0 ) )
+         int signalId = object->metaObject()->indexOfSignal( theSignal );
+         if( signalId != -1 )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s ) %i", pszSignal, signalId ) );
-            nResult = 0;
+            if( QMetaObject::disconnect( object, signalId, 0, 0 ) )
+            {
+               HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s ) %i", pszSignal, signalId ) );
+               nResult = 0;
+            }
+            else
+               nResult = 5;
          }
          else
-            nResult = 5;
+            nResult = 4;
+
+         if( nResult == 0 )
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisConnect( %s ) signalId=%i, %p", pszSignal, signalId, object ) );
+            hbqt_bindDelSlot( pObj, signalId, NULL );
+         }
       }
       else
-         nResult = 4;
-
-      if( nResult == 0 )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisConnect( %s ) signalId=%i, %p", pszSignal, signalId, object ) );
-         hbqt_bindDelSlot( pObj, signalId, NULL );
+          // Returns true if the connection is successfully broken; otherwise returns false.
+          if( object->disconnect() )
+             nResult = 0;
+          else 
+             nResult = 9;
       }
    }
    else
       nResult = 2;
 
-   HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect return %d", nResult ) );
+   HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisCconnect return %d", nResult ) );
+
    return nResult;
 }
 
@@ -472,9 +484,9 @@ HB_FUNC( HBQT_DISCONNECTBIS )
          HBQSlots * receiverSlots = hbqt_bindGetReceiverSlotsByHbObject( hb_param( 1, HB_IT_OBJECT ) );
 	        if( receiverSlots )
 		      {
-               void * pText01 = NULL;
-                ret = receiverSlots->hbDisconnect( hb_param( 1, HB_IT_OBJECT ), ( char * ) hb_parstr_utf8( 2, &pText01, NULL ) );
-         hb_strfree( pText01 );
+//               void * pText01 = NULL;
+                ret = receiverSlots->hbDisconnect( hb_param( 1, HB_IT_OBJECT ), NULL );
+//         hb_strfree( pText01 );
 		       }
    }
     else
