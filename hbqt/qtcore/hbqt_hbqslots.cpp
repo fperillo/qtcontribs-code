@@ -234,6 +234,8 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
       return id;
 
    QObject * object = sender();
+   HB_TRACE( HB_TR_DEBUG, ( "qt_metacall sender=%p", object ) );
+   HB_TRACE( HB_TR_DEBUG, ( "qt_metacall id=%d", id ) );
    if( object )
    {
       QByteArray paramString;
@@ -242,6 +244,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
       int parameterCount = arrayOfTypes.size();
       QStringList pList;
 
+      HB_TRACE( HB_TR_DEBUG, ( "qt_metacall parameterCount=%d", parameterCount ) );
       if( parameterCount > 0 )
       {
          char szParams[ 20 ];
@@ -252,10 +255,13 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
          hb_snprintf( szPList, sizeof( szPList ), "PLIST_%d", id );
          pList = object->property( szPList ).toStringList();
 
-         if( paramString.isNull() )
+         HB_TRACE( HB_TR_DEBUG, ( "qt_metacall sParams=<%s> szPList=<%s> paramString=<%s>", szParams, szPList, paramString.data() ) );
+
+         if( paramString.isEmpty() )
          {
             QStringList parList;
-            // HB_TRACE( HB_TR_DEBUG, ( "SlotsProxy signature %s", meta.signature() ) );
+//             HB_TRACE( HB_TR_DEBUG, ( "  qt_metacall SlotsProxy signature %s", meta.signature() ) );
+            HB_TRACE( HB_TR_DEBUG, ( "  qt_metacall .isNull()" ) );
 
             for( int i = 0; i < parameterCount; i++ )
             {
@@ -288,14 +294,23 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
 
       if( hb_vmRequestReenter() )
       {
+
+         HB_TRACE( HB_TR_DEBUG, ( "Searching QT object( %p )", object ) );
+
          PHB_ITEM hbObject = hbqt_bindGetHbObjectByQtObject( object );
+
+         HB_TRACE( HB_TR_DEBUG, ( "Found HB object( %p )", hbObject ) );
+
          if( hbObject )
          {
             PHB_ITEM p = hbqt_bindGetSlots( hbObject, id );
             hb_itemRelease( hbObject );
             if( p )
             {
+               HB_TRACE( HB_TR_DEBUG, ( "p=%p", p ) );
                PHB_ITEM codeBlock = hb_arrayGetItemPtr( p, 1 );
+               HB_TRACE( HB_TR_DEBUG, ( "codeBlock=%p", codeBlock ) );
+
                if( HB_IS_BLOCK( codeBlock ) )
                {
                   if( parameterCount == 0 )
@@ -307,6 +322,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
                   else
                   {
                      int paramId = s_argCombinations.indexOf( paramString );
+                     HB_TRACE( HB_TR_DEBUG, ( "metacall %d", paramId ) );
                      if( paramId >= 0 )
                      {
                         PHBQT_SLOT_FUNC pCallback = s_pCallback.at( paramId );
@@ -476,21 +492,21 @@ HB_FUNC( HBQT_DISCONNECT )
 
 HB_FUNC( HBQT_DISCONNECTBIS )
 {
-	   int ret = -1;
+   int ret = -1;
 
-     HB_TRACE( HB_TR_DEBUG, ( "enters HBQT_DISCONNECTBIS" ) );
-     if( hb_pcount() == 2 && HB_ISCHAR( 2 ) && hbqt_par_isDerivedFrom( 1, "QOBJECT" )  )
-    {
-         HBQSlots * receiverSlots = hbqt_bindGetReceiverSlotsByHbObject( hb_param( 1, HB_IT_OBJECT ) );
-	        if( receiverSlots )
-		      {
-//               void * pText01 = NULL;
-                ret = receiverSlots->hbDisconnect( hb_param( 1, HB_IT_OBJECT ), NULL );
-//         hb_strfree( pText01 );
-		       }
+   HB_TRACE( HB_TR_DEBUG, ( "enters HBQT_DISCONNECTBIS" ) );
+   if( hb_pcount() == 2 && HB_ISCHAR( 2 ) && hbqt_par_isDerivedFrom( 1, "QOBJECT" )  )
+   {
+      HBQSlots * receiverSlots = hbqt_bindGetReceiverSlotsByHbObject( hb_param( 1, HB_IT_OBJECT ) );
+      if( receiverSlots )
+      {
+         void * pText01 = NULL;
+         ret = receiverSlots->hbDisconnect( hb_param( 1, HB_IT_OBJECT ), ( char * ) hb_parstr_utf8( 2, &pText01, NULL ) );
+         hb_strfree( pText01 );
+      }
    }
-    else
-          hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   else
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 
     HB_TRACE( HB_TR_DEBUG, ( "exits HBQT_DISCONNECTBIS" ) );
     hb_retni( ret );
