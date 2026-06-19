@@ -1275,6 +1275,9 @@ HB_FUNC( __HBQT_ZAP )
        HB_TRACE( HB_TR_DEBUG, ( "... __HBQT_ZAP - PHB_ITEM=%p -> %s ) ...", pObject, hb_objGetClsName( pObject ) ) );
        hbqt_bindZapHbObject( pObject );
    }
+
+   HB_TRACE( HB_TR_DEBUG, ( "... __HBQT_ZAP setting %p to NIL", pObject ) );
+   hb_itemPutNil( pObject );
 }
 
 HB_FUNC( __HBQT_DELETE )
