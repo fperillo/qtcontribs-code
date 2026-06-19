@@ -174,6 +174,7 @@ static void hbqt_SlotsExecPointerIntString( PHB_ITEM * codeBlock, void ** argume
 
 static void hbqt_SlotsExecBool( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
+	HB_TRACE( HB_TR_DEBUG, ("SlotsExecBool" ));
    Q_UNUSED( pList );
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
@@ -778,6 +779,7 @@ HB_FUNC( __HBQTCORE ) {;}
 
 static void hbqt_lib_init( void * cargo )
 {
+	HB_TRACE( HB_TR_DEBUG, ( "hbqt_lib_init" ) );
    HB_SYMBOL_UNUSED( cargo );
    hbqt_registerCallbacks();
 }
@@ -785,6 +787,7 @@ static void hbqt_lib_init( void * cargo )
 static void hbqt_lib_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
+	HB_TRACE( HB_TR_DEBUG, ( "hbqt_lib_exit" ) );
 }
 
 HB_CALL_ON_STARTUP_BEGIN( _hbqtcore_init_ )
