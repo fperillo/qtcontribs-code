@@ -241,6 +241,7 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
 
 HB_FUNC( HBQT_CONNECTEVENT )
 {
+   HB_TRACE( HB_TR_DEBUG, ( "enters HBQT_CONNECTEVENT" ) );
    int ret = -1;
 
    if( hb_pcount() == 3 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) && HB_ISNUM( 2 ) && HB_ISBLOCK( 3 ) )
@@ -260,7 +261,7 @@ HB_FUNC( HBQT_CONNECTEVENT )
 
 HB_FUNC( HBQT_DISCONNECTEVENT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "enters HBQT_DISCONNECT" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "enters HBQT_DISCONNECTEVENT" ) );
    int ret = -1;
    if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) && HB_ISNUM( 2 )  )
    {
@@ -274,7 +275,7 @@ HB_FUNC( HBQT_DISCONNECTEVENT )
    {
       hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
-   HB_TRACE( HB_TR_DEBUG, ( "exits HBQT_DISCONNECT" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "exits HBQT_DISCONNECTEVENT" ) );
    hb_retni( ret );
 }
 

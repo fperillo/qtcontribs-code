@@ -309,7 +309,7 @@ static QList<PHB_ITEM> hbqt_bindGetObjectListByThread( int iThreadId )
       if( bind->iThreadId == iThreadId )
       {
          deleteIt << bind->hbObject;
-         HB_TRACE( HB_TR_DEBUG, ( "...hbqt_bindThreadRelease( %i, %p, %i, %s )", iThreadId, bind->qtObject, deleteIt.size(), bind->szClassName ) );
+         HB_TRACE( HB_TR_DEBUG, ( "...hbqt_bindGetObjectListByThread( %i, %p, %i, %s )", iThreadId, bind->qtObject, deleteIt.size(), bind->szClassName ) );
       }
       bind = bind->next;
    }
@@ -761,14 +761,16 @@ void hbqt_bindDestroyQtObject( void * qtObject, QObject * qObject )
    HB_TRACE( HB_TR_DEBUG, ( ".........QT_DESTROY_BEGINS...............%p %p", qtObject, qObject ) );
    if( qtObject )
    {
-      qObject->disconnect();
+      int res = qObject->disconnect();
+      HB_TRACE( HB_TR_DEBUG, ( ".........   disconnect() return: %d", res ) ) ; 
 
       PHBQT_BIND bind = hbqt_bindGetBindByQtObject( qtObject );
       if( bind != NULL )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "............QT_DESTROYS( %i, %i, %p, %s )..............", bind->iThreadId, bind->iFlags, bind->qtObject, bind->szClassName ) );
+         HB_TRACE( HB_TR_DEBUG, ( "..........   found ( %i, %i, %p, %s )..............", bind->iThreadId, bind->iFlags, bind->qtObject, bind->szClassName ) );
          if( bind->fEventFilterInstalled )
          {
+            HB_TRACE( HB_TR_DEBUG, ( "..........   removeEventFilter" ) );
             qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
             bind->fEventFilterInstalled = false;
          }
