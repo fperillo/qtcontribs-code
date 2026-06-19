@@ -223,7 +223,7 @@ HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:disconnect" )
 
    IF PCount() == 0                               // Intent is to disconnect all connections.
 
-      HB_TRACE( HB_TR_DEBUG, "DISCONNECT ALL" ) 
+      HB_TRACE( HB_TR_DEBUG, "DISCONNECT ALL before _hE="+str(len(::__hEvents))+ "  __Ev="+str(len(::__Events))+"  __Sl="+str(len(::__Slots)))
       IF ! Empty( ::__hEvents )
          FOR EACH hEvent IN ::__hEvents
             xKey := hEvent:__enumKey()
@@ -235,7 +235,14 @@ HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:disconnect" )
             ::__hEvents[ xKey ] := NIL
          NEXT
          ::__hEvents := { => }
+
+         FOR EACH hEvent IN ::__Slots
+            xKey := hEvent:__enumKey()
+            ::__Slots[ xKey ] := NIL
+         NEXT
+         ::__Slots := { => }
       ENDIF
+      HB_TRACE( HB_TR_DEBUG, "DISCONNECT ALL after  _hE="+str(len(::__hEvents))+ "  __Ev="+str(len(::__Events))+"  __Sl="+str(len(::__Slots)))
       RETURN .T.
    ENDIF
 
