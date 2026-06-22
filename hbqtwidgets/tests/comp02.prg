@@ -149,13 +149,20 @@ HB_TRACE( HB_TR_DEBUG, "A006" )
 HB_TRACE( HB_TR_DEBUG, "A007" )
 
 HB_TRACE( HB_TR_DEBUG, "A008" )
-    oDlg:setWindowTitle( "Number of Qt Objects: " + hb_ntos( __hbqt_itemsInGlobalList() ) )
+//    oDlg:setWindowTitle( "Number of Qt Objects: " + hb_ntos( __hbqt_itemsInGlobalList() ) )
 HB_TRACE( HB_TR_DEBUG, "A009" )
    oDlg:exec()
 HB_TRACE( HB_TR_DEBUG, "A010a" )
    // oDlg:destroy()
 HB_TRACE( HB_TR_DEBUG, "A010b" )
+__hbqt_itemsInGlobalList()
    __hbqt_zap( oDlg )
+
+HB_TRACE( HB_TR_DEBUG, "VALTYPE(oDlg) "+valtype( oDlg )+":"+oDlg:className() )
+HB_TRACE( HB_TR_DEBUG, "A010b2" )
+//   __hbqt_zap( oDlg )
+HB_TRACE( HB_TR_DEBUG, "A010c" )
+//   oDlg:setParent( QWidget() )
 
 HB_TRACE( HB_TR_DEBUG, "A011" )
 
