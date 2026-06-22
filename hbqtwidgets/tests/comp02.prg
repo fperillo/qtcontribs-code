@@ -137,6 +137,14 @@ HB_TRACE( HB_TR_DEBUG, "button2 clicked()" )
    oDlg:btnOpt3:connect( "clicked()", {|| oDlg:labelTitle:setText( "Option 3 Clicked" ) } )
    oDlg:btnOpt4:connect( "clicked()", {|| oDlg:labelTitle:setText( "Option 4 Clicked" ) } )
 
+   HB_TRACE( HB_TR_DEBUG, "-->::ODLG=" +str(__HBQT_REFS( oDlg )))
+   HB_TRACE( HB_TR_DEBUG, "-->::labelTitle=" +str(__HBQT_REFS( oDlg:labelTitle )))
+   HB_TRACE( HB_TR_DEBUG, "-->::btnOpt1=" +str(__HBQT_REFS( oDlg:btnOpt1 )))
+   HB_TRACE( HB_TR_DEBUG, "-->::btnOpt2=" +str(__HBQT_REFS( oDlg:btnOpt2 )))
+   HB_TRACE( HB_TR_DEBUG, "-->::btnOpt3=" +str(__HBQT_REFS( oDlg:btnOpt3 )))
+   HB_TRACE( HB_TR_DEBUG, "-->::btnOpt4=" +str(__HBQT_REFS( oDlg:btnOpt4 )))
+   HB_TRACE( HB_TR_DEBUG, "-->::ODLG=" +str(__HBQT_REFS( oDlg )))
+
 HB_TRACE( HB_TR_DEBUG, "A003" )
 
 
@@ -250,6 +258,23 @@ METHOD ui_composite:popolate(oParent)
    ::labelStatus:SetText( "I'm a detached Qt Object !!!" )
    ::labelStatus := NIL
 
+   HB_TRACE( HB_TR_DEBUG, "::labelTitle=" +str(__HBQT_REFS( ::labelTitle )))
+   HB_TRACE( HB_TR_DEBUG, "::frameBrowse=" +str(__HBQT_REFS( ::frameBrowse )))
+   HB_TRACE( HB_TR_DEBUG, "::listItems=" +str(__HBQT_REFS( ::listItems )))
+   HB_TRACE( HB_TR_DEBUG, "::btnOpt1=" +str(__HBQT_REFS( ::btnOpt1 )))
+   HB_TRACE( HB_TR_DEBUG, "::btnOpt2=" +str(__HBQT_REFS( ::btnOpt2 )))
+   HB_TRACE( HB_TR_DEBUG, "::btnOpt3=" +str(__HBQT_REFS( ::btnOpt3 )))
+   HB_TRACE( HB_TR_DEBUG, "::btnOpt4=" +str(__HBQT_REFS( ::btnOpt4 )))
+//   HB_TRACE( HB_TR_DEBUG, "::labelStatus=" +str(__HBQT_REFS( ::labelStatus )))
+
+//   __HBQT_REFS( ::labelTitle )
+//   __HBQT_REFS( ::frameBrowse )
+//   __HBQT_REFS( ::listItems )
+//   __HBQT_REFS( ::btnOpt1 )
+//   __HBQT_REFS( ::btnOpt2 )
+//   __HBQT_REFS( ::btnOpt3 )
+//   __HBQT_REFS( ::btnOpt4 )
+ //  __HBQT_REFS( ::labelStatus )
    HB_TRACE( HB_TR_DEBUG, "ui_composite:popolate EXIT" )
 
    RETURN Self

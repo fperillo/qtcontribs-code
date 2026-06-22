@@ -1286,6 +1286,24 @@ HB_FUNC( __HBQT_DELETE )
    }
 }
 
+HB_FUNC( __HBQT_REFS )
+{
+
+   PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
+   HB_COUNTER i = 0;
+
+       HB_TRACE( HB_TR_DEBUG, ( "__HBQT_REFS  pObject = %p", pObject ) );
+   if( pObject )
+   {
+       i = hb_arrayRefs( pObject );
+
+       HB_TRACE( HB_TR_DEBUG, ( "__HBQT_REFS = %p %d", hb_arrayId( pObject ), (int ) i ) );
+       hb_retni( (int) i );
+       return ;
+   }
+   hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( __HBQT_FINDCHILD )
 {
    QObject * parentWidget;
