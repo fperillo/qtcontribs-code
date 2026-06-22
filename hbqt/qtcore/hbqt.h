@@ -103,8 +103,15 @@ HB_EXPORT void      hbqt_slots_unregister_callback( QByteArray sig );
 
 HB_EXPORT void *    hbqt_par_ptr( int iParam );
 HB_EXPORT void      hbqt_par_detach_ptrGC( int iParam );
+
+HB_EXPORT HB_BOOL   hbqt_par_isDerivedFromQObject( int iParam ); 
+HB_EXPORT HB_BOOL   hbqt_par_isDerivedFromQWidget( int iParam );
 HB_EXPORT HB_BOOL   hbqt_par_isDerivedFrom( int iParam, const char * pszClsName ); /* check if parameter iParam is class or subclass of szClsName */
+
+HB_EXPORT HB_BOOL   hbqt_obj_isDerivedFromQObject( PHB_ITEM pItem );
+HB_EXPORT HB_BOOL   hbqt_obj_isDerivedFromQWidget( PHB_ITEM pItem );
 HB_EXPORT HB_BOOL   hbqt_obj_isDerivedFrom( PHB_ITEM pItem, const char * pszClsName ); /* check if parameter iParam is class or subclass of szClsName */
+
 HB_EXPORT void *    hbqt_get_ptr( PHB_ITEM pObj );
 
 HB_EXPORT void      hbqt_errRT_ARG( void );

@@ -265,6 +265,18 @@ HB_BOOL hbqt_obj_isDerivedFrom( PHB_ITEM pItem, const char * pszClsName )
    return hb_clsIsParent( hb_objGetClass( pItem ), clsname.toUpper().data() );
 }
 
+HB_BOOL hbqt_obj_isDerivedFromQObject( PHB_ITEM pItem )
+{
+
+   return hb_clsIsParent( hb_objGetClass( pItem ), "QOBJECT" );
+}
+
+HB_BOOL hbqt_obj_isDerivedFromQWidget( PHB_ITEM pItem )
+{
+
+   return hb_clsIsParent( hb_objGetClass( pItem ), "QWIDGET" );
+}
+
 /* Checks that the param iParam is an object and a subclass of pszClsName */
 HB_BOOL hbqt_par_isDerivedFrom( int iParam, const char * pszClsName )
 {
@@ -281,6 +293,39 @@ HB_BOOL hbqt_par_isDerivedFrom( int iParam, const char * pszClsName )
    }
    return HB_FALSE;
 }
+
+HB_BOOL hbqt_par_isDerivedFromQObject( int iParam, const char * pszClsName )
+{
+   PHB_ITEM pItem;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_par_isDerivedFromQObject( %i, %s )", iParam, pszClsName ) );
+
+   if( ( pItem = hb_param( iParam, HB_IT_OBJECT ) ) != NULL )
+   {
+      if( hbqt_bindGetQtObject( pItem ) == NULL )
+         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      else
+         return hbqt_obj_isDerivedFromQObject( pItem );
+   }
+   return HB_FALSE;
+}
+
+HB_BOOL hbqt_par_isDerivedFromQWidget( int iParam, const char * pszClsName )
+{
+   PHB_ITEM pItem;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_par_isDerivedFromQWidget( %i, %s )", iParam, pszClsName ) );
+
+   if( ( pItem = hb_param( iParam, HB_IT_OBJECT ) ) != NULL )
+   {
+      if( hbqt_bindGetQtObject( pItem ) == NULL )
+         hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      else
+         return hbqt_obj_isDerivedFromQWidget( pItem );
+   }
+   return HB_FALSE;
+}
+
 
 HB_FUNC( HBQT_QT_VERSION )
 {
