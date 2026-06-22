@@ -460,8 +460,8 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
 
    if( iFlags & HBQT_BIT_QOBJECT )
    {
-      char * pname = ( char * ) hb_xgrab( 200 );
-      char * pname1 = ( char * ) hb_xgrab( 200 );
+      char * pname = ( char * ) hb_xgrab( HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 );
+      char * pname1 = ( char * ) hb_xgrab( HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 );
       HB_TRACE( HB_TR_DEBUG, ( "......HARBOUR_REQUEST_BIND_OBJECT( %i, %i, %p, %s, %s, %s )", id, iFlags, qtObject, szClassName, hb_procname( 0, pname, HB_TRUE ),  hb_procname( 1, pname1, HB_TRUE ) ) );
       hb_xfree( pname );
       hb_xfree( pname1 );
@@ -483,6 +483,7 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
    PHBQT_BIND bind = hbqt_bindGetBindByQtObject( qtObject );
    if( bind != NULL )
    {
+      HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject return arrayFromId" ) );
       return hb_arrayFromId( pItem, bind->hbObject );
    }
 
@@ -504,21 +505,20 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
             hb_itemMove( pItem, pObject );
             pObject = pItem;
          }
-         if( bind == NULL )
-         {
-            bind = ( PHBQT_BIND ) hb_xgrab( sizeof( HBQT_BIND ) );
-            memset( bind, 0, sizeof( HBQT_BIND ) );
+         // if( bind == NULL )
+         // {
+            bind = ( PHBQT_BIND ) hb_xgrabz( sizeof( HBQT_BIND ) );
+            // memset( bind, 0, sizeof( HBQT_BIND ) );
             bind->qtObject              = qtObject;
             bind->pDelFunc              = pDelFunc;
             bind->iFlags                = iFlags;
             bind->fEventFilterInstalled = false;
             bind->iThreadId             = id;
+            bind->hbObject              = hb_arrayId( pObject );
             hb_strncpy( bind->szClassName, szClassName, HB_SIZEOFARRAY( bind->szClassName ) - 1 );
 
             hbqt_bindAddBind( bind );
-         }
-
-         bind->hbObject = hb_arrayId( pObject );
+         // }
 
          if( isQObject )
          {
@@ -528,6 +528,7 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
             if( bind->iFlags & HBQT_BIT_OWNER )
             {
                QObject::connect( obj, SIGNAL( destroyed(QObject*) ), hbqt_bindGetThreadData()->pDestroyer, SLOT( destroyer(QObject*) ) );
+               HB_TRACE( HB_TR_DEBUG, ( "......hbqt_bindGetHbObject_connected_to_destroy()( %p, %s )", obj, szClassName ) );
             }
 
             hb_vmPushDynSym( s_dynsym_SETSLOTS );  /* initializes __Slots hash */
@@ -540,7 +541,7 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "......hbqt_bindGetHbObject( %p )", qtObject ) );
+            HB_TRACE( HB_TR_DEBUG, ( "......hbqt_bindGetHbObject( %p ) is not a QObject", qtObject ) );
          }
       }
       hb_vmRequestRestore();
@@ -614,8 +615,8 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
                   qObject->disconnect();
                   if( bind->fEventFilterInstalled )
                   {
-                     qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
 		     bind->fEventFilterInstalled = false;
+                     qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
                   }
 	          HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect PRE") );
 	          hbqt_bindDelEvents( pObject );
@@ -669,6 +670,7 @@ void hbqt_bindZapHbObject( PHB_ITEM pObject )
       HB_TRACE( HB_TR_DEBUG, ( "..... ZapHbObject PHB_ITEM=%p", pObject ) );
 
       PHBQT_BIND bind = hbqt_bindGetBindByHbObject( hbObject );
+
       if( bind != NULL )
       {
          void * qtObject         = bind->qtObject;
@@ -682,14 +684,10 @@ void hbqt_bindZapHbObject( PHB_ITEM pObject )
          QObject * qObject       = NULL;
 
          if( isQObject )
-         {
             qObject = ( QObject * ) qtObject;
-         }
 
          if( pDelFunc != NULL )
-         {
             fDelQtObject = true;
-         }
 
          HB_TRACE( HB_TR_DEBUG, ( "00....ZapHbObject ( fDelQtObject=%d )", fDelQtObject ) );
 
@@ -708,8 +706,8 @@ void hbqt_bindZapHbObject( PHB_ITEM pObject )
                   qObject->disconnect();
                   if( bind->fEventFilterInstalled )
                   {
-                     qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
 		     bind->fEventFilterInstalled = false;
+                     qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
                   }
 	          HB_TRACE(HB_TR_DEBUG, ("Forzo disconnect PRE") );
 	          hbqt_bindDelEvents( pObject );
@@ -733,9 +731,8 @@ void hbqt_bindZapHbObject( PHB_ITEM pObject )
                if( isQObject )
                {
                   HB_TRACE( HB_TR_DEBUG, ( "04.....ZapHbObject_not-qt-but-only-hb_OBJECT( %i, %i, %p, %s ) isQObject=TRUE fDelQtObject=FALSE", bind->iThreadId, iFlags, qtObject, bind->szClassName ) );
-                  hbqt_bindRemoveBind( bind );  /*  MUST HAVE : hb_arrayFromId() returns NIL onto retained object as such  */
 		  qObject->disconnect( SIGNAL( destroyed(QObject*) ) );
-// 				  QObject::connect( obj, SIGNAL( destroyed(QObject*) ), hbqt_bindGetThreadData()->pDestroyer, SLOT( destroyer(QObject*) ) );
+                  hbqt_bindRemoveBind( bind );  /*  MUST HAVE : hb_arrayFromId() returns NIL onto retained object as such  */
                }
             }
          }
@@ -771,8 +768,8 @@ void hbqt_bindDestroyQtObject( void * qtObject, QObject * qObject )
          if( bind->fEventFilterInstalled )
          {
             HB_TRACE( HB_TR_DEBUG, ( "..........   removeEventFilter" ) );
-            qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
             bind->fEventFilterInstalled = false;
+            qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
          }
 	 if ( bind->iFlags & HBQT_BIT_QOBJECT )
 	 {
@@ -801,8 +798,8 @@ static void hbqt_bindDestroyQtObjectA( void * qtObject, QObject * qObject )
 
          if( bind->fEventFilterInstalled )
          {
-            qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
             bind->fEventFilterInstalled = false;
+            qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
          }
 
          int iFlags = bind->iFlags;
@@ -1253,12 +1250,12 @@ PHB_ITEM hbqt_bindGetEvents( PHB_ITEM pSenderObject, int iEventId )
  */
 HB_FUNC( __HBQT_DESTROY )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "... HbQtObjectHandler( DESTRUCTOR FUNCTION __hbqt_destroy() ) ..." ) );
+   HB_TRACE( HB_TR_DEBUG, ( "... HbQtObjectHandler:: __hbqt_destroy() ) ..." ) );
 
    PHB_ITEM pObject = hb_stackSelfItem();
    if( pObject )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "... HbQtObjectHandler( DESTRUCTOR FUNCTION __hbqt_destroy() - PHB_ITEM=%p -> %s ) ...", pObject, hb_objGetClsName( pObject ) ) );
+      HB_TRACE( HB_TR_DEBUG, ( "... HbQtObjectHandler:: __hbqt_destroy() - PHB_ITEM=%p -> %s ) ...", pObject, hb_objGetClsName( pObject ) ) );
       hbqt_bindDestroyHbObject( pObject );
    }
 }
@@ -1338,10 +1335,11 @@ int __hbqt_bindItemsInGlobalList( void )
 
    HBQT_BIND_LOCK
    bind = hbqt_bindGetData();
+   HB_TRACE( HB_TR_DEBUG,    ( "_______________________( QTOBJECT, IDOBJECT, CLASSNAME )" ) );
    while( bind )
    {
       i++;
-      HB_TRACE( HB_TR_DEBUG, ( "_____InGlobalList______( %p, %s )", bind->qtObject, bind->szClassName ) );
+      HB_TRACE( HB_TR_DEBUG, ( "_____InGlobalList______( %p, %p, %s )", bind->qtObject, bind->hbObject, bind->szClassName ) );
       bind = bind->next;
    }
    HBQT_BIND_UNLOCK
@@ -1355,10 +1353,11 @@ int __hbqt_dump_bindItemsInGlobalList( void )
 
    HBQT_BIND_LOCK
    bind = hbqt_bindGetData();
+   HB_TRACE( HB_TR_DEBUG,    ( "_______________________( QTOBJECT, IDOBJECT, CLASSNAME )" ) );
    while( bind )
    {
       i++;
-      HB_TRACE( HB_TR_ALWAYS, ( "_____Items # %i______( %p, %s )", i, bind->qtObject, bind->szClassName ) );
+      HB_TRACE( HB_TR_ALWAYS, ( "_____Items # %i______( %p, %p, %s )", i, bind->qtObject, bind->hbObject, bind->szClassName ) );
       bind = bind->next;
    }
    HBQT_BIND_UNLOCK
