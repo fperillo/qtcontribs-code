@@ -550,7 +550,93 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
    return pObject;
 }
 
+/* This function is called when a hbQt object loses focus */
+
 void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
+{
+   void * hbObject = hb_arrayId( pObject );
+   if( hbObject )
+   {
+      PHBQT_BIND bind = hbqt_bindGetBindByHbObject( hbObject );
+      if( bind != NULL )
+      {
+         void *         qtObject  = bind->qtObject;
+         int            iFlags    = bind->iFlags;
+         int            iThreadId = bind->iThreadId;
+         PHBQT_DEL_FUNC pDelFunc  = bind->pDelFunc;
+         bool           isQObject = ( iFlags & HBQT_BIT_QOBJECT ) != 0;
+         bool           isOwner   = ( iFlags & HBQT_BIT_OWNER )   != 0;
+         QObject *      qObject   = isQObject ? ( QObject * ) qtObject : NULL;
+
+         char szClassName[ HB_SYMBOL_NAME_LEN + 1 ];
+         hb_strncpy( szClassName, bind->szClassName, HB_SIZEOFARRAY( szClassName ) - 1 );
+
+         HB_TRACE( HB_TR_DEBUG, ( ".........HARBOUR_DESTROY_BEGINS( %i, %i, %p, %s )",
+                                  iThreadId, iFlags, qtObject, szClassName ) );
+
+         if( isQObject && qObject != NULL )
+         {
+            bool isWidget = qObject->isWidgetType();
+
+            /* Sever ONLY hbQt's own dispatch to THIS object: its connections to the
+               per-thread slot receiver (explicit 4-arg form for old Qt/C++ compilers)
+               and its event filter. Never a blanket qObject->disconnect(): that would
+               also drop destroyed(). Children's connections are NOT touched here; they
+               are cleaned up by their own destructors / Qt destroyed(). The wrapper's
+               __Slots/__Events hashes are freed with the wrapper by the GC. */
+            QObject::disconnect( qObject, NULL, hbqt_bindGetThreadData()->pReceiverSlots, NULL );
+            if( bind->fEventFilterInstalled )
+            {
+               qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
+               bind->fEventFilterInstalled = false;
+            }
+
+            if( isOwner && isWidget && qObject->parent() == NULL )
+            {
+               /* Top-level widget hbQt owns: never delete synchronously. Defer the
+                  destruction to the event loop, and drop our bind NOW so no qtObject
+                  lookup can walk the dangling hb_arrayId during the deleteLater
+                  window. After this point the Qt object is scheduled for deletion and
+                  is no longer reachable through hbQt lookups. */
+               HB_TRACE( HB_TR_DEBUG, ( "............HARBOUR_DELETELATER( %i, %p, %s )", iThreadId, qtObject, szClassName ) );
+               qObject->deleteLater();
+               hbqt_bindRemoveBind( bind );
+               return;
+            }
+
+            if( isOwner && isWidget && qObject->parent() != NULL )
+            {
+               /* Parented widget: drop ownership, the Qt parent deletes it. */
+               HB_TRACE( HB_TR_DEBUG, ( "............HARBOUR_DROP_OWNERSHIP( %i, %p, %s )", iThreadId, qtObject, szClassName ) );
+               hbqt_bindRemoveBind( bind );
+               return;
+            }
+
+            if( isOwner && ! isWidget && qObject->parent() == NULL && pDelFunc != NULL )
+            {
+               /* Non-widget QObject we own that Qt will not auto-free (e.g. a
+                  standalone QTimer): unchanged synchronous delete. */
+               HB_TRACE( HB_TR_DEBUG, ( "............HARBOUR_DESTROYING_qt_q_OBJECT( %i, %p, %s )", iThreadId, qtObject, szClassName ) );
+               hbqt_bindRemoveBind( bind );
+               pDelFunc( qtObject, iFlags );
+               return;
+            }
+
+            /* not owner, or non-widget parented, or nothing we can delete: forget it */
+            hbqt_bindRemoveBind( bind );
+            return;
+         }
+
+         /* non-QObject value wrapper: Qt will not free it, Harbour must.
+            If this was a QObject with a NULL Qt pointer, just drop the bind. */
+         hbqt_bindRemoveBind( bind );
+         if( ! isQObject && isOwner && pDelFunc != NULL )
+            pDelFunc( qtObject, iFlags );
+      }
+   }
+}
+
+void old_hbqt_bindDestroyHbObject( PHB_ITEM pObject )
 {
    void * hbObject = hb_arrayId( pObject );
    if( hbObject )
