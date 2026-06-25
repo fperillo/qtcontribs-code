@@ -215,7 +215,7 @@ HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:connect" )
 METHOD HbQtObjectHandler:disconnect( cnEvent )
    LOCAL hEvent, xKey, nResult := 0
 
-HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:disconnect" ) 
+   HB_TRACE( HB_TR_DEBUG, "HbQtObjectHandler:disconnect, pcount()="+str(pCount()) ) 
    ::initialize()
    IF ! __objDerivedFrom( Self, "QOBJECT" )
       RETURN .f.
