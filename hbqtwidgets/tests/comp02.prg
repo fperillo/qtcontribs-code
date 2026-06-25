@@ -137,13 +137,14 @@ HB_TRACE( HB_TR_DEBUG, "button2 clicked()" )
    oDlg:btnOpt3:connect( "clicked()", {|| oDlg:labelTitle:setText( "Option 3 Clicked" ) } )
    oDlg:btnOpt4:connect( "clicked()", {|| oDlg:labelTitle:setText( "Option 4 Clicked" ) } )
 
-   HB_TRACE( HB_TR_DEBUG, "-->::ODLG=" +str(__HBQT_REFS( oDlg )))
-   HB_TRACE( HB_TR_DEBUG, "-->::labelTitle=" +str(__HBQT_REFS( oDlg:labelTitle )))
-   HB_TRACE( HB_TR_DEBUG, "-->::btnOpt1=" +str(__HBQT_REFS( oDlg:btnOpt1 )))
-   HB_TRACE( HB_TR_DEBUG, "-->::btnOpt2=" +str(__HBQT_REFS( oDlg:btnOpt2 )))
-   HB_TRACE( HB_TR_DEBUG, "-->::btnOpt3=" +str(__HBQT_REFS( oDlg:btnOpt3 )))
-   HB_TRACE( HB_TR_DEBUG, "-->::btnOpt4=" +str(__HBQT_REFS( oDlg:btnOpt4 )))
-   HB_TRACE( HB_TR_DEBUG, "-->::ODLG=" +str(__HBQT_REFS( oDlg )))
+   // HB_TRACE( HB_TR_DEBUG, "-->::ODLG=" +str(__HBQT_REFS( oDlg )))
+   // HB_TRACE( HB_TR_DEBUG, "-->::labelTitle=" +str(__HBQT_REFS( oDlg:labelTitle )))
+   // HB_TRACE( HB_TR_DEBUG, "-->::btnOpt1=" +str(__HBQT_REFS( oDlg:btnOpt1 )))
+   // HB_TRACE( HB_TR_DEBUG, "-->::btnOpt2=" +str(__HBQT_REFS( oDlg:btnOpt2 )))
+   // HB_TRACE( HB_TR_DEBUG, "-->::btnOpt3=" +str(__HBQT_REFS( oDlg:btnOpt3 )))
+   // HB_TRACE( HB_TR_DEBUG, "-->::btnOpt4=" +str(__HBQT_REFS( oDlg:btnOpt4 )))
+   // oDlg:__Slots[ "poppo" ] := {|| oDlg:e() }
+   // HB_TRACE( HB_TR_DEBUG, "-->::ODLG=" +str(__HBQT_REFS( oDlg )))
 
 HB_TRACE( HB_TR_DEBUG, "A003" )
 
@@ -164,13 +165,13 @@ HB_TRACE( HB_TR_DEBUG, "A010a" )
    // oDlg:destroy()
 HB_TRACE( HB_TR_DEBUG, "A010b" )
 __hbqt_itemsInGlobalList()
-   __hbqt_zap( oDlg )
+//   __hbqt_zap( oDlg )
 
 HB_TRACE( HB_TR_DEBUG, "VALTYPE(oDlg) "+valtype( oDlg )+":"+oDlg:className() )
 HB_TRACE( HB_TR_DEBUG, "A010b2" )
 //   __hbqt_zap( oDlg )
 HB_TRACE( HB_TR_DEBUG, "A010c" )
-//   oDlg:setParent( QWidget() )
+//    oDlg:setParent( 0 )
 
 HB_TRACE( HB_TR_DEBUG, "A011" )
 
@@ -178,8 +179,12 @@ HB_TRACE( HB_TR_DEBUG, "A011" )
 //   SetKey( K_INS, kIns )
 
 HB_TRACE( HB_TR_DEBUG, "A012" )
-   oDlg := NIL
+//    oDlg := NIL
 
+   oDlg:btnOpt1:disconnect( )
+   oDlg:btnOpt2:disconnect( )
+   oDlg:btnOpt3:disconnect( )
+   oDlg:btnOpt4:disconnect( )
 HB_TRACE( HB_TR_DEBUG, "A013" )
    RETURN NIL
 
@@ -194,7 +199,8 @@ HB_TRACE( HB_TR_DEBUG, "A013" )
 FUNCTION hbqtui_composite( oParent )
    LOCAL o
 
-   o := ui_composite():new( oParent )
+   // o := ui_composite():new( oParent )
+   o := ui_composite():new( )
    o:popolate()
 
    RETURN o
@@ -212,8 +218,9 @@ CLASS ui_composite INHERIT HB_QDialog
    VAR    btnOpt4
    VAR    labelStatus
 
-   METHOD destroy()
    METHOD popolate()
+
+   DESTRUCTOR destroy()
 
    ENDCLASS
 
@@ -247,7 +254,7 @@ METHOD ui_composite:popolate(oParent)
    ::btnOpt2                           :  setGeometry( 380, 420, 81, 23 )
    ::btnOpt3                           := QPushButton( Self )
    ::btnOpt3                           :  setObjectName( e"btnOpt3" )
-   ::btnOpt3                           :  setGeometry( 380, 450, 81, 23 )
+   ::btnOpt3                           :  setGeometry( QRect(380, 450, 81, 23) )
    ::btnOpt4                           := QPushButton( Self )
    ::btnOpt4                           :  setObjectName( e"btnOpt4" )
    ::btnOpt4                           :  setGeometry( 380, 480, 81, 23 )
@@ -258,13 +265,13 @@ METHOD ui_composite:popolate(oParent)
    ::labelStatus:SetText( "I'm a detached Qt Object !!!" )
    ::labelStatus := NIL
 
-   HB_TRACE( HB_TR_DEBUG, "::labelTitle=" +str(__HBQT_REFS( ::labelTitle )))
-   HB_TRACE( HB_TR_DEBUG, "::frameBrowse=" +str(__HBQT_REFS( ::frameBrowse )))
-   HB_TRACE( HB_TR_DEBUG, "::listItems=" +str(__HBQT_REFS( ::listItems )))
-   HB_TRACE( HB_TR_DEBUG, "::btnOpt1=" +str(__HBQT_REFS( ::btnOpt1 )))
-   HB_TRACE( HB_TR_DEBUG, "::btnOpt2=" +str(__HBQT_REFS( ::btnOpt2 )))
-   HB_TRACE( HB_TR_DEBUG, "::btnOpt3=" +str(__HBQT_REFS( ::btnOpt3 )))
-   HB_TRACE( HB_TR_DEBUG, "::btnOpt4=" +str(__HBQT_REFS( ::btnOpt4 )))
+//   HB_TRACE( HB_TR_DEBUG, "::labelTitle=" +str(__HBQT_REFS( ::labelTitle )))
+//   HB_TRACE( HB_TR_DEBUG, "::frameBrowse=" +str(__HBQT_REFS( ::frameBrowse )))
+//   HB_TRACE( HB_TR_DEBUG, "::listItems=" +str(__HBQT_REFS( ::listItems )))
+//   HB_TRACE( HB_TR_DEBUG, "::btnOpt1=" +str(__HBQT_REFS( ::btnOpt1 )))
+//   HB_TRACE( HB_TR_DEBUG, "::btnOpt2=" +str(__HBQT_REFS( ::btnOpt2 )))
+//   HB_TRACE( HB_TR_DEBUG, "::btnOpt3=" +str(__HBQT_REFS( ::btnOpt3 )))
+//   HB_TRACE( HB_TR_DEBUG, "::btnOpt4=" +str(__HBQT_REFS( ::btnOpt4 )))
 //   HB_TRACE( HB_TR_DEBUG, "::labelStatus=" +str(__HBQT_REFS( ::labelStatus )))
 
 //   __HBQT_REFS( ::labelTitle )
@@ -274,26 +281,26 @@ METHOD ui_composite:popolate(oParent)
 //   __HBQT_REFS( ::btnOpt2 )
 //   __HBQT_REFS( ::btnOpt3 )
 //   __HBQT_REFS( ::btnOpt4 )
- //  __HBQT_REFS( ::labelStatus )
+//   __HBQT_REFS( ::labelStatus )
    HB_TRACE( HB_TR_DEBUG, "ui_composite:popolate EXIT" )
 
    RETURN Self
 
 
 METHOD ui_composite:destroy()
-   HB_TRACE( HB_TR_DEBUG, "ui_composite:destroy ENTER" )
-   ::labelTitle                        := NIL
-   ::groupGets                         := NIL
-   ::frameBrowse                       := NIL
-   ::listItems                         := NIL
-   HB_TRACE( HB_TR_DEBUG, "PRE BUTTON1" )
-   ::btnOpt1                           := NIL
-   HB_TRACE( HB_TR_DEBUG, "POST BUTTON1" )
-   ::btnOpt2                           := NIL
-   ::btnOpt3                           := NIL
-   ::btnOpt4                           := NIL
-   ::labelStatus                       := NIL
-   HB_TRACE( HB_TR_DEBUG, "ui_composite:destroy EXIT" )
+   HB_TRACE( HB_TR_DEBUG, "ui_composite:destroy DESTROYER" )
+//   ::labelTitle                        := NIL
+//   ::groupGets                         := NIL
+//   ::frameBrowse                       := NIL
+//   ::listItems                         := NIL
+//   HB_TRACE( HB_TR_DEBUG, "PRE BUTTON1" )
+//   ::btnOpt1                           := NIL
+//   HB_TRACE( HB_TR_DEBUG, "POST BUTTON1" )
+//   ::btnOpt2                           := NIL
+//   ::btnOpt3                           := NIL
+//   ::btnOpt4                           := NIL
+ //  ::labelStatus                       := NIL
+//   HB_TRACE( HB_TR_DEBUG, "ui_composite:destroy EXIT" )
 
    RETURN NIL
 
